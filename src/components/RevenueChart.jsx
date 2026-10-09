@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 
-// Mini chart rendered purely with Canvas — no chart library needed
 export default function RevenueChart() {
   const canvasRef = useRef(null);
   const [hoveredIdx, setHoveredIdx] = useState(-1);
@@ -29,7 +28,6 @@ export default function RevenueChart() {
 
     ctx.clearRect(0, 0, W, H);
 
-    // Grid lines
     for (let i = 0; i <= 4; i++) {
       const y = padTop + (chartH / 4) * i;
       ctx.strokeStyle = 'rgba(100,116,139,0.12)';
@@ -42,13 +40,11 @@ export default function RevenueChart() {
       ctx.fillText(`$${(val / 1000).toFixed(0)}k`, padLeft - 10, y + 4);
     }
 
-    // Data points
     const points = data.map((d, i) => ({
       x: padLeft + (chartW / (data.length - 1)) * i,
       y: padTop + chartH - (d.value / maxVal) * chartH,
     }));
 
-    // Gradient fill
     const grad = ctx.createLinearGradient(0, padTop, 0, H - padBottom);
     grad.addColorStop(0, 'rgba(139,92,246,0.25)');
     grad.addColorStop(1, 'rgba(139,92,246,0.0)');
@@ -60,7 +56,6 @@ export default function RevenueChart() {
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // Line
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
     for (let i = 1; i < points.length; i++) {
@@ -76,7 +71,6 @@ export default function RevenueChart() {
     ctx.lineWidth = 2.5;
     ctx.stroke();
 
-    // Dots
     points.forEach((p, i) => {
       ctx.beginPath();
       ctx.arc(p.x, p.y, hoveredIdx === i ? 6 : 4, 0, Math.PI * 2);
@@ -87,7 +81,6 @@ export default function RevenueChart() {
       ctx.stroke();
     });
 
-    // X labels
     data.forEach((d, i) => {
       ctx.fillStyle = hoveredIdx === i ? '#e2e8f0' : '#64748b';
       ctx.font = `${hoveredIdx === i ? '600' : '400'} 12px Plus Jakarta Sans, sans-serif`;
@@ -95,7 +88,6 @@ export default function RevenueChart() {
       ctx.fillText(d.month, points[i].x, H - padBottom + 22);
     });
 
-    // Tooltip
     if (hoveredIdx >= 0 && hoveredIdx < data.length) {
       const p = points[hoveredIdx];
       const text = `$${data[hoveredIdx].value.toLocaleString()}`;

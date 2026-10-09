@@ -1,18 +1,14 @@
 @import "tailwindcss";
-
 @layer base {
   body {
     @apply bg-slate-950 text-slate-100 font-sans antialiased min-h-screen;
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 }
-
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #0f172a; }
 ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #475569; }
-
-/* Hide any sign-up link or footer in Clerk SignIn component */
 .cl-footerAction,
 .cl-footerActionLink,
 .cl-footerActionText,
@@ -21,8 +17,6 @@
 [data-localization-key="signIn.start.actionLink__signUp"] {
   display: none !important;
 }
-
-/* Hide Google & all Social Login buttons and social divider */
 .cl-socialButtons,
 .cl-socialButtonsRoot,
 .cl-socialButtonsBlockButton,

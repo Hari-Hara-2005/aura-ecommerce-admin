@@ -60,7 +60,6 @@ export default function Coupons() {
     <div className="min-h-screen">
       <Header title="Promotions & Coupons" subtitle="Create discount codes, configure minimum spend limits, and monitor usage." />
 
-      {/* Toast Alert */}
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 bg-emerald-500/90 text-white px-5 py-3 rounded-xl shadow-xl backdrop-blur-md flex items-center gap-2 border border-emerald-400/30 text-sm font-medium animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 text-white" />
@@ -80,7 +79,6 @@ export default function Coupons() {
           </button>
         </div>
 
-        {/* Coupons Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {coupons.map(coupon => {
             const isActive = coupon.status === 'active';
@@ -147,7 +145,6 @@ export default function Coupons() {
         </div>
       </div>
 
-      {/* Add Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 md:p-8 shadow-2xl relative">

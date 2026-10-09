@@ -16,7 +16,6 @@ export default function Users() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [toast, setToast] = useState('');
 
-  // New user form state
   const [newUserData, setNewUserData] = useState({
     firstName: '',
     lastName: '',
@@ -32,7 +31,6 @@ export default function Users() {
     setTimeout(() => setToast(''), 3500);
   };
 
-  // Filtered users
   const filteredUsers = useMemo(() => {
     return users.filter(u => {
       const q = search.toLowerCase();
@@ -50,7 +48,6 @@ export default function Users() {
     });
   }, [users, search, roleFilter, statusFilter]);
 
-  // Metrics
   const totalCustomers = users.length;
   const vipCount = users.filter(u => u.role === 'vip').length;
   const totalSpentAll = users.reduce((acc, u) => acc + (u.totalSpent || 0), 0);
@@ -112,7 +109,6 @@ export default function Users() {
     showToast(`Customer ${newUser.firstName} created successfully!`);
   };
 
-  // Get orders linked to selected user
   const userOrders = useMemo(() => {
     if (!selectedUser) return [];
     const allOrders = orderService.getOrders();
@@ -126,7 +122,6 @@ export default function Users() {
     <div className="min-h-screen">
       <Header title="Customers & Users" subtitle="Manage registered Clerk shoppers, customer tiers, and purchase histories." />
 
-      {/* Toast */}
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 bg-emerald-500/90 text-white px-5 py-3 rounded-xl shadow-xl backdrop-blur-md flex items-center gap-2 border border-emerald-400/30 text-sm font-medium animate-in fade-in slide-in-from-bottom-2">
           <CheckCircle2 className="w-4 h-4 text-white" />
@@ -135,7 +130,6 @@ export default function Users() {
       )}
 
       <div className="p-8 space-y-6">
-        {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-5">
             <div className="flex items-center justify-between">
@@ -190,10 +184,8 @@ export default function Users() {
           </div>
         </div>
 
-        {/* Filter and Action Bar */}
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="flex flex-1 items-center gap-3 w-full md:w-auto">
-            {/* Search */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input
@@ -210,7 +202,6 @@ export default function Users() {
               )}
             </div>
 
-            {/* Role Filter */}
             <select
               value={roleFilter}
               onChange={e => setRoleFilter(e.target.value)}
@@ -222,7 +213,6 @@ export default function Users() {
               <option value="admin">Admins</option>
             </select>
 
-            {/* Status Filter */}
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
@@ -243,7 +233,6 @@ export default function Users() {
           </button>
         </div>
 
-        {/* Users Table */}
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -283,7 +272,6 @@ export default function Users() {
 
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        {/* Role Badge */}
                         <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-semibold uppercase tracking-wider border ${
                           user.role === 'vip'
                             ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
@@ -294,7 +282,6 @@ export default function Users() {
                           {user.role}
                         </span>
 
-                        {/* Status Badge */}
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium ${
                           user.status === 'active'
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
@@ -335,7 +322,6 @@ export default function Users() {
 
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        {/* View Profile */}
                         <button
                           onClick={() => setSelectedUser(user)}
                           className="p-2 rounded-lg bg-slate-800/60 hover:bg-violet-600/20 text-slate-400 hover:text-violet-400 border border-slate-700/40 transition"
@@ -344,7 +330,6 @@ export default function Users() {
                           <Eye className="w-4 h-4" />
                         </button>
 
-                        {/* Toggle Status */}
                         <button
                           onClick={() => handleToggleStatus(user.id)}
                           className={`p-2 rounded-lg border transition ${
@@ -357,7 +342,6 @@ export default function Users() {
                           {user.status === 'active' ? <XCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
                         </button>
 
-                        {/* Delete */}
                         <button
                           onClick={() => handleDeleteUser(user.id)}
                           className="p-2 rounded-lg bg-slate-800/60 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 border border-slate-700/40 transition"
@@ -383,7 +367,6 @@ export default function Users() {
         </div>
       </div>
 
-      {/* Customer Detail Drawer / Modal */}
       {selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl relative">
@@ -394,7 +377,6 @@ export default function Users() {
               <X className="w-5 h-5" />
             </button>
 
-            {/* Header info */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 pb-6 border-b border-slate-800/60">
               <img
                 src={selectedUser.imageUrl}
@@ -422,7 +404,6 @@ export default function Users() {
               </div>
             </div>
 
-            {/* Details Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
               <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-800/60">
                 <p className="text-xs text-slate-500 uppercase font-semibold">Contact & Phone</p>
@@ -475,7 +456,6 @@ export default function Users() {
               </div>
             </div>
 
-            {/* Orders for this user */}
             <div className="mt-6">
               <h4 className="text-sm font-semibold text-slate-300 mb-3 uppercase tracking-wider">
                 Order History ({userOrders.length})
@@ -515,7 +495,6 @@ export default function Users() {
         </div>
       )}
 
-      {/* Add Customer Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative">

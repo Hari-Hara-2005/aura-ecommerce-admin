@@ -20,12 +20,10 @@ export default function ProtectedRoute({ children }) {
     );
   }
 
-  // 1. Not signed in at all -> send to /login
   if (!isSignedIn) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // 2. Signed in, but NOT an authorized admin -> 403 Forbidden Access Screen
   if (!isAdmin) {
     const userEmail = (
       user?.primaryEmailAddress?.emailAddress ||
@@ -61,7 +59,6 @@ export default function ProtectedRoute({ children }) {
             </p>
           </div>
 
-          {/* Action buttons */}
           <div className="space-y-3">
             {authorizedSuccess ? (
               <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-2">
@@ -95,6 +92,5 @@ export default function ProtectedRoute({ children }) {
     );
   }
 
-  // 3. User is signed in and authorized as Admin
   return children;
 }

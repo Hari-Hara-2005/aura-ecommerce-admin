@@ -19,7 +19,6 @@ export default function StatsCards() {
             key={card.key}
             className="group relative bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-5 hover:border-slate-700/60 transition-all duration-300 hover:-translate-y-0.5"
           >
-            {/* Accent glow */}
             <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
             
             <div className="relative flex items-start justify-between">

@@ -29,7 +29,6 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
         collapsed ? 'w-[72px]' : 'w-[260px]'
       }`}
     >
-      {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-6 border-b border-slate-800/40">
         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shrink-0 shadow-lg shadow-violet-500/25">
           <Sparkles className="w-5 h-5 text-white" />
@@ -42,7 +41,6 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
         )}
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
         {navItems.map(item => {
           const Icon = item.icon;
@@ -69,7 +67,6 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
         })}
       </nav>
 
-      {/* Collapse Toggle */}
       <button
         onClick={() => setCollapsed(!collapsed)}
         className="mx-3 mb-4 p-2 rounded-xl bg-slate-800/60 border border-slate-700/40 text-slate-400 hover:text-white hover:bg-slate-700/60 transition flex items-center justify-center"

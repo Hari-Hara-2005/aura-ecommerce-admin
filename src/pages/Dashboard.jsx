@@ -21,10 +21,8 @@ export default function Dashboard() {
     <div className="min-h-screen">
       <Header title="Dashboard" subtitle="Welcome back! Here's what's happening with your store." />
       <div className="p-8 space-y-6">
-        {/* Stats */}
         <StatsCards />
 
-        {/* Charts & Top Products */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <RevenueChart />
@@ -51,10 +49,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Recent Orders */}
         <RecentOrdersTable />
 
-        {/* Recent Customers */}
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl">
           <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800/40">
             <h3 className="text-base font-semibold text-white">Recent Customers</h3>

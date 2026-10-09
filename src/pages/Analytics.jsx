@@ -1,8 +1,6 @@
-import React from 'react';
 import Header from '../components/Header';
 import {
-  TrendingUp, BarChart3, PieChart, DollarSign,
-  Users, ShoppingBag, ArrowUpRight, Zap, Globe, CreditCard
+  TrendingUp, PieChart, Globe, CreditCard,
 } from 'lucide-react';
 
 export default function Analytics() {
@@ -25,7 +23,6 @@ export default function Analytics() {
       <Header title="Analytics & Intelligence" subtitle="Performance metrics, conversion funnels, and revenue channel breakdown." />
 
       <div className="p-8 space-y-6">
-        {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-5">
             <p className="text-sm text-slate-400 font-medium">Conversion Rate</p>
@@ -56,45 +53,42 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Channels & Category Distribution */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Channel Performance */}
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
             <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
               <Globe className="w-4 h-4 text-violet-400" />
               Acquisition Channels
             </h3>
             <div className="space-y-4">
-              {topChannels.map((c, i) => (
-                <div key={i} className="p-4 rounded-xl bg-slate-800/30 border border-slate-800 flex items-center justify-between">
+              {topChannels.map((channel) => (
+                <div key={channel.channel} className="p-4 rounded-xl bg-slate-800/30 border border-slate-800 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-white">{c.channel}</p>
+                    <p className="text-sm font-semibold text-white">{channel.channel}</p>
                     <div className="flex items-center gap-3 mt-1 text-xs text-slate-400">
-                      <span>Share: {c.share}%</span>
-                      <span className="text-emerald-400 font-medium">{c.growth}</span>
+                      <span>Share: {channel.share}%</span>
+                      <span className="text-emerald-400 font-medium">{channel.growth}</span>
                     </div>
                   </div>
-                  <span className="text-base font-bold text-white">{c.revenue}</span>
+                  <span className="text-base font-bold text-white">{channel.revenue}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Category Share */}
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
             <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
               <PieChart className="w-4 h-4 text-fuchsia-400" />
               Category Revenue Share
             </h3>
             <div className="space-y-5">
-              {categoryBreakdown.map((cat, i) => (
-                <div key={i} className="space-y-2">
+              {categoryBreakdown.map((category) => (
+                <div key={category.name} className="space-y-2">
                   <div className="flex justify-between text-xs">
-                    <span className="font-medium text-slate-300">{cat.name}</span>
-                    <span className="font-bold text-white">{cat.amount} ({cat.percent}%)</span>
+                    <span className="font-medium text-slate-300">{category.name}</span>
+                    <span className="font-bold text-white">{category.amount} ({category.percent}%)</span>
                   </div>
                   <div className="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden">
-                    <div className={`h-full rounded-full ${cat.color}`} style={{ width: `${cat.percent}%` }} />
+                    <div className={`h-full rounded-full ${category.color}`} style={{ width: `${category.percent}%` }} />
                   </div>
                 </div>
               ))}
@@ -102,7 +96,6 @@ export default function Analytics() {
           </div>
         </div>
 
-        {/* Payment Methods */}
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6">
           <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
             <CreditCard className="w-4 h-4 text-emerald-400" />

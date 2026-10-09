@@ -16,13 +16,11 @@ export default function Products() {
   const [stockFilter, setStockFilter] = useState('ALL');
   const [sortBy, setSortBy] = useState('default');
   
-  // Modals
   const [viewProduct, setViewProduct] = useState(null);
   const [editProduct, setEditProduct] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [toast, setToast] = useState('');
 
-  // Add Product Form
   const [newProduct, setNewProduct] = useState({
     title: '',
     description: '',
@@ -39,7 +37,6 @@ export default function Products() {
     setTimeout(() => setToast(''), 3500);
   };
 
-  // Load products and categories
   const loadData = async () => {
     setLoading(true);
     try {
@@ -60,7 +57,6 @@ export default function Products() {
     loadData();
   }, []);
 
-  // Filtered & sorted products
   const filteredProducts = useMemo(() => {
     let list = products.filter(p => {
       const q = search.toLowerCase();
@@ -88,13 +84,11 @@ export default function Products() {
     return list;
   }, [products, search, selectedCategory, stockFilter, sortBy]);
 
-  // Catalog stats
   const totalItems = products.length;
   const lowStockCount = products.filter(p => (p.stock || 0) > 0 && (p.stock || 0) <= 10).length;
   const outOfStockCount = products.filter(p => (p.stock || 0) === 0).length;
   const avgPrice = totalItems > 0 ? (products.reduce((a, b) => a + (b.price || 0), 0) / totalItems) : 0;
 
-  // Handlers
   const handleAddProduct = (e) => {
     e.preventDefault();
     if (!newProduct.title || !newProduct.price) return;
@@ -157,7 +151,6 @@ export default function Products() {
     <div className="min-h-screen">
       <Header title="Products Management" subtitle="Manage store catalog, stock thresholds, pricing, and product specifications." />
 
-      {/* Toast Alert */}
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 bg-emerald-500/90 text-white px-5 py-3 rounded-xl shadow-xl backdrop-blur-md flex items-center gap-2 border border-emerald-400/30 text-sm font-medium animate-in fade-in slide-in-from-bottom-2">
           <CheckCircle2 className="w-4 h-4 text-white" />
@@ -166,7 +159,6 @@ export default function Products() {
       )}
 
       <div className="p-8 space-y-6">
-        {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-5">
             <div className="flex items-center justify-between">
@@ -221,10 +213,8 @@ export default function Products() {
           </div>
         </div>
 
-        {/* Filter & Action Toolbar */}
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-4 flex flex-col lg:flex-row gap-4 items-center justify-between">
           <div className="flex flex-1 flex-wrap items-center gap-3 w-full lg:w-auto">
-            {/* Search */}
             <div className="relative flex-1 min-w-[240px] max-w-sm">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input
@@ -241,7 +231,6 @@ export default function Products() {
               )}
             </div>
 
-            {/* Category Filter */}
             <select
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
@@ -253,7 +242,6 @@ export default function Products() {
               ))}
             </select>
 
-            {/* Stock Filter */}
             <select
               value={stockFilter}
               onChange={e => setStockFilter(e.target.value)}
@@ -265,7 +253,6 @@ export default function Products() {
               <option value="OUT_OF_STOCK">Out of Stock (0)</option>
             </select>
 
-            {/* Sort Filter */}
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
@@ -288,7 +275,6 @@ export default function Products() {
           </button>
         </div>
 
-        {/* Products Table */}
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl overflow-hidden">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-400">
@@ -377,7 +363,6 @@ export default function Products() {
 
                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end gap-1.5">
-                            {/* View Detail */}
                             <button
                               onClick={() => setViewProduct(product)}
                               className="p-2 rounded-lg bg-slate-800/60 hover:bg-violet-600/20 text-slate-400 hover:text-violet-400 border border-slate-700/40 transition"
@@ -386,7 +371,6 @@ export default function Products() {
                               <Eye className="w-4 h-4" />
                             </button>
 
-                            {/* Edit */}
                             <button
                               onClick={() => setEditProduct({ ...product })}
                               className="p-2 rounded-lg bg-slate-800/60 hover:bg-blue-600/20 text-slate-400 hover:text-blue-400 border border-slate-700/40 transition"
@@ -395,7 +379,6 @@ export default function Products() {
                               <Edit3 className="w-4 h-4" />
                             </button>
 
-                            {/* Delete */}
                             <button
                               onClick={() => handleDeleteProduct(product.id, product.title)}
                               className="p-2 rounded-lg bg-slate-800/60 hover:bg-rose-600/20 text-slate-400 hover:text-rose-400 border border-slate-700/40 transition"
@@ -423,7 +406,6 @@ export default function Products() {
         </div>
       </div>
 
-      {/* Product Details Modal */}
       {viewProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl relative">
@@ -435,7 +417,6 @@ export default function Products() {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Image & gallery */}
               <div>
                 <img
                   src={viewProduct.thumbnail || (viewProduct.images && viewProduct.images[0])}
@@ -452,7 +433,6 @@ export default function Products() {
                 )}
               </div>
 
-              {/* Specs & info */}
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center gap-2">
@@ -465,7 +445,6 @@ export default function Products() {
                   <p className="text-xs text-slate-400 mt-0.5">Brand: <span className="text-slate-200 font-medium">{viewProduct.brand || 'AURA'}</span></p>
                 </div>
 
-                {/* Price block */}
                 <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 flex items-center justify-between">
                   <div>
                     <p className="text-xs text-slate-400">Retail Price</p>
@@ -479,7 +458,6 @@ export default function Products() {
                   )}
                 </div>
 
-                {/* Inventory state */}
                 <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-2">
                   <div className="flex justify-between text-xs">
                     <span className="text-slate-400">Inventory Status</span>
@@ -495,13 +473,11 @@ export default function Products() {
                   </div>
                 </div>
 
-                {/* Description */}
                 <div>
                   <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Description</h4>
                   <p className="text-xs text-slate-300 leading-relaxed">{viewProduct.description}</p>
                 </div>
 
-                {/* Quick actions inside modal */}
                 <div className="flex gap-3 pt-3 border-t border-slate-800">
                   <button
                     onClick={() => {
@@ -525,7 +501,6 @@ export default function Products() {
         </div>
       )}
 
-      {/* Edit Product Modal */}
       {editProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative">
@@ -608,7 +583,6 @@ export default function Products() {
         </div>
       )}
 
-      {/* Add Product Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl relative">

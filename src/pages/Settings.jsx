@@ -55,7 +55,6 @@ export default function Settings() {
     <div className="min-h-screen">
       <Header title="Store Settings" subtitle="Configure payment gateways, Clerk authentication, and store parameters." />
 
-      {/* Toast Alert */}
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 bg-emerald-500/90 text-white px-5 py-3 rounded-xl shadow-xl backdrop-blur-md flex items-center gap-2 border border-emerald-400/30 text-sm font-medium animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 text-white" />
@@ -65,7 +64,6 @@ export default function Settings() {
 
       <div className="p-8 max-w-4xl space-y-6">
         <form onSubmit={handleSave} className="space-y-6">
-          {/* Store Info */}
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-semibold text-white flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-violet-400" />
@@ -119,7 +117,6 @@ export default function Settings() {
             </div>
           </div>
 
-          {/* Payment Gateway (Razorpay) */}
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-semibold text-white flex items-center gap-2">
               <CreditCard className="w-4 h-4 text-emerald-400" />
@@ -154,7 +151,6 @@ export default function Settings() {
             </div>
           </div>
 
-          {/* Clerk Auth & Admin Allowlist */}
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-semibold text-white flex items-center gap-2">
               <Shield className="w-4 h-4 text-violet-400" />
@@ -181,7 +177,6 @@ export default function Settings() {
                 </div>
               </div>
 
-              {/* Add admin email input */}
               <div className="flex gap-2">
                 <input
                   type="email"
@@ -199,7 +194,6 @@ export default function Settings() {
                 </button>
               </div>
 
-              {/* List of allowed admin emails */}
               <div className="flex flex-wrap gap-2 pt-1">
                 {allowedAdmins.map(email => (
                   <span
@@ -224,7 +218,6 @@ export default function Settings() {
             </div>
           </div>
 
-          {/* Alerts */}
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-semibold text-white flex items-center gap-2">
               <Bell className="w-4 h-4 text-amber-400" />

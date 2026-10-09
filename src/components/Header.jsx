@@ -15,15 +15,12 @@ export default function Header({ title, subtitle }) {
   return (
     <header className="sticky top-0 z-40 bg-slate-950/60 backdrop-blur-xl border-b border-slate-800/40 px-8 py-4">
       <div className="flex items-center justify-between">
-        {/* Left: Title */}
         <div>
           <h2 className="text-xl font-bold text-white tracking-tight">{title}</h2>
           {subtitle && <p className="text-sm text-slate-400 mt-0.5">{subtitle}</p>}
         </div>
 
-        {/* Right: Search, Notification, User */}
         <div className="flex items-center gap-4">
-          {/* Search Bar */}
           <div className="relative hidden md:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input
@@ -33,13 +30,11 @@ export default function Header({ title, subtitle }) {
             />
           </div>
 
-          {/* Notifications */}
           <button className="relative p-2.5 rounded-xl bg-slate-800/50 border border-slate-700/40 hover:bg-slate-700/60 transition">
             <Bell className="w-4 h-4 text-slate-400" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-violet-500 ring-2 ring-slate-950"></span>
           </button>
 
-          {/* User */}
           {isSignedIn ? (
             <div className="flex items-center gap-3 pl-4 border-l border-slate-800/60">
               <img

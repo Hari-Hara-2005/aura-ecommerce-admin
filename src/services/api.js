@@ -8,7 +8,6 @@ export const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// ---------- USERS MANAGEMENT ----------
 const INITIAL_USERS = [
   { id: 'usr_2xA9kL', firstName: 'Alex', lastName: 'Morgan', email: 'alex.morgan@example.com', role: 'buyer', phone: '+1 555-234-8901', imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=128&q=80', createdAt: '2026-08-12T09:14:00Z', lastSignIn: '2026-10-07T18:22:00Z', ordersCount: 7, totalSpent: 2847.50, status: 'active', city: 'New Delhi', country: 'India' },
   { id: 'usr_3bR1mN', firstName: 'Jordan', lastName: 'Taylor', email: 'jordan.taylor@example.com', role: 'vip', phone: '+91 98765-43210', imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=128&q=80', createdAt: '2026-06-01T11:30:00Z', lastSignIn: '2026-10-08T06:55:00Z', ordersCount: 18, totalSpent: 12430.00, status: 'active', city: 'Mumbai', country: 'India' },
@@ -66,7 +65,6 @@ export const userService = {
 
 export const MOCK_USERS = INITIAL_USERS;
 
-// ---------- ORDERS MANAGEMENT ----------
 const INITIAL_ORDERS = [
   {
     id: 'ORD-M1K7RZ-4821', status: 'Confirmed', createdAt: '2026-10-07T14:32:00Z',
@@ -165,13 +163,11 @@ export function getMockOrders() {
   return orderService.getOrders();
 }
 
-// ---------- PRODUCTS CRUD ----------
 const LOCAL_PRODUCTS_KEY = 'aura_admin_products';
 
 export const productService = {
   async getProducts({ limit = 50, skip = 0, search } = {}) {
     try {
-      // 1. Fetch from our Express Neon Backend API first
       let url = `/products?limit=${limit}&skip=${skip}`;
       if (search && search.trim()) url += `&search=${encodeURIComponent(search)}`;
       const r = await apiClient.get(url);
@@ -182,7 +178,6 @@ export const productService = {
       console.warn('[Admin API] products backend fallback to local:', e.message);
     }
 
-    // 2. Local fallback
     try {
       const local = JSON.parse(localStorage.getItem(LOCAL_PRODUCTS_KEY) || '[]');
       return { products: local, total: local.length };
@@ -244,7 +239,6 @@ export const productService = {
   }
 };
 
-// ---------- COUPONS MANAGEMENT ----------
 const INITIAL_COUPONS = [
   { code: 'AURA10', discount: 10, type: 'percentage', minSpend: 50, usageCount: 142, status: 'active', expiresAt: '2026-12-31' },
   { code: 'LUXE20', discount: 20, type: 'percentage', minSpend: 200, usageCount: 68, status: 'active', expiresAt: '2026-11-30' },

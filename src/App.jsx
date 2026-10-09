@@ -17,10 +17,8 @@ export default function App() {
     <AdminAuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public Login Route */}
           <Route path="/login" element={<Login />} />
 
-          {/* Protected Admin Console Routes */}
           <Route
             path="/"
             element={
@@ -38,7 +36,6 @@ export default function App() {
             <Route path="settings" element={<Settings />} />
           </Route>
 
-          {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

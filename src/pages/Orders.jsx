@@ -33,7 +33,6 @@ export default function Orders() {
     showToast('Orders refreshed from storage');
   };
 
-  // Filtered orders
   const filteredOrders = useMemo(() => {
     return orders.filter(o => {
       const q = search.toLowerCase();
@@ -49,13 +48,11 @@ export default function Orders() {
     });
   }, [orders, search, statusFilter]);
 
-  // Metrics
   const totalOrders = orders.length;
   const processingCount = orders.filter(o => o.status === 'Processing' || o.status === 'Confirmed').length;
   const shippedCount = orders.filter(o => o.status === 'Shipped').length;
   const grossRevenue = orders.reduce((sum, o) => sum + (o.pricing?.total || 0), 0);
 
-  // Status update
   const handleStatusChange = (orderId, newStatus) => {
     const updated = orderService.updateOrderStatus(orderId, newStatus);
     setOrders(updated);
@@ -69,7 +66,6 @@ export default function Orders() {
     <div className="min-h-screen">
       <Header title="Orders Management" subtitle="Track live client orders, Razorpay transactions, and fulfillment stages." />
 
-      {/* Toast Alert */}
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 bg-emerald-500/90 text-white px-5 py-3 rounded-xl shadow-xl backdrop-blur-md flex items-center gap-2 border border-emerald-400/30 text-sm font-medium animate-in fade-in slide-in-from-bottom-2">
           <CheckCircle2 className="w-4 h-4 text-white" />
@@ -78,7 +74,6 @@ export default function Orders() {
       )}
 
       <div className="p-8 space-y-6">
-        {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
           <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-5">
             <div className="flex items-center justify-between">
@@ -133,10 +128,8 @@ export default function Orders() {
           </div>
         </div>
 
-        {/* Toolbar */}
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="flex flex-1 items-center gap-3 w-full md:w-auto">
-            {/* Search */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
               <input
@@ -153,7 +146,6 @@ export default function Orders() {
               )}
             </div>
 
-            {/* Status Filter */}
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
@@ -177,7 +169,6 @@ export default function Orders() {
           </button>
         </div>
 
-        {/* Orders Table */}
         <div className="bg-slate-900/60 backdrop-blur-sm border border-slate-800/50 rounded-2xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -289,7 +280,6 @@ export default function Orders() {
         </div>
       </div>
 
-      {/* Full Order Details Modal */}
       {selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-3xl w-full max-h-[92vh] overflow-y-auto p-6 md:p-8 shadow-2xl relative">
@@ -300,7 +290,6 @@ export default function Orders() {
               <X className="w-5 h-5" />
             </button>
 
-            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-800/60 gap-4">
               <div>
                 <div className="flex items-center gap-3">
@@ -317,7 +306,6 @@ export default function Orders() {
                 </p>
               </div>
 
-              {/* Status Updater */}
               <div className="flex items-center gap-2">
                 <span className="text-xs text-slate-400">Change Status:</span>
                 <select
@@ -334,9 +322,7 @@ export default function Orders() {
               </div>
             </div>
 
-            {/* Info Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-              {/* Customer & Shipping */}
               <div className="p-5 rounded-2xl bg-slate-800/30 border border-slate-800 space-y-3">
                 <div className="flex items-center gap-2 text-violet-400 font-semibold text-xs uppercase tracking-wider">
                   <User className="w-4 h-4" />
@@ -364,7 +350,6 @@ export default function Orders() {
                 </div>
               </div>
 
-              {/* Payment Details */}
               <div className="p-5 rounded-2xl bg-slate-800/30 border border-slate-800 space-y-3">
                 <div className="flex items-center gap-2 text-emerald-400 font-semibold text-xs uppercase tracking-wider">
                   <CreditCard className="w-4 h-4" />
@@ -397,7 +382,6 @@ export default function Orders() {
               </div>
             </div>
 
-            {/* Items Breakdown */}
             <div className="mt-6">
               <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
                 Items Purchased ({selectedOrder.items?.length || 1})
@@ -424,7 +408,6 @@ export default function Orders() {
               </div>
             </div>
 
-            {/* Financial Summary */}
             <div className="mt-6 p-5 rounded-2xl bg-slate-800/40 border border-slate-800 space-y-2 text-sm">
               <div className="flex justify-between text-slate-400">
                 <span>Subtotal</span>
@@ -450,7 +433,6 @@ export default function Orders() {
               </div>
             </div>
 
-            {/* Footer Buttons */}
             <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={() => {

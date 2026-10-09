@@ -7,10 +7,8 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex">
-      {/* Sidebar with state */}
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
-      {/* Main Content Area */}
       <div
         className={`flex-1 transition-all duration-300 ease-in-out min-w-0 ${
           collapsed ? 'ml-[72px]' : 'ml-[260px]'

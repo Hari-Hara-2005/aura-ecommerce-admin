@@ -8,7 +8,6 @@ const match = rawKey.match(/(pk_(?:test|live)_[a-zA-Z0-9$_\-]+)/);
 const CLERK_KEY = match ? match[1] : (rawKey.trim().startsWith('pk_') ? rawKey.trim() : '');
 const isClerkValid = Boolean(CLERK_KEY);
 
-// Helper to get authorized admin emails
 export function getAuthorizedAdminEmails() {
   const envEmails = (import.meta.env.VITE_ADMIN_EMAILS || '')
     .split(',')
@@ -23,7 +22,6 @@ export function getAuthorizedAdminEmails() {
     }
   } catch {}
 
-  // Combine and deduplicate
   const all = Array.from(new Set([...envEmails, ...localEmails]));
   return all;
 }
@@ -40,7 +38,6 @@ export function isUserAdmin(user) {
   if (!user) return false;
   const allowed = getAuthorizedAdminEmails();
 
-  // If no specific admin emails are defined yet, the first logged-in user is treated as admin owner
   if (allowed.length === 0) {
     return true;
   }
@@ -83,7 +80,6 @@ function ClerkBridge({ children }) {
   );
 }
 
-// Fallback provider if no Clerk key is present in environment
 function UnconfiguredClerkProvider({ children }) {
   return (
     <AuthContext.Provider
