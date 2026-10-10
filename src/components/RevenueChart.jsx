@@ -16,7 +16,6 @@ export default function RevenueChart() {
           (o) => o.status !== 'Cancelled'
         );
 
-        // Generate the last 6 months labels
         const months = [];
         const now = new Date();
         for (let i = 5; i >= 0; i--) {
@@ -43,7 +42,6 @@ export default function RevenueChart() {
           if (target) {
             target.value += orderAmt;
           } else if (months.length > 0) {
-            // If older, add to first month
             months[0].value += orderAmt;
           }
         });

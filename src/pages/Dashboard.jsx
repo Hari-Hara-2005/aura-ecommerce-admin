@@ -29,7 +29,6 @@ export default function Dashboard() {
         const products = productsRes?.products || (Array.isArray(productsRes) ? productsRes : []);
         const orders = Array.isArray(ordersRes) ? ordersRes : [];
 
-        // Calculate actual product sales from live orders
         const salesMap = {};
         orders.forEach((ord) => {
           if (ord.status === 'Cancelled') return;
@@ -54,7 +53,6 @@ export default function Dashboard() {
         if (sortedOrderProducts.length > 0) {
           setTopProducts(sortedOrderProducts.slice(0, 5));
         } else {
-          // If no orders yet, display real products from the catalog
           const fallbackCatalog = products.slice(0, 5).map((p) => ({
             id: p.id,
             name: p.title || p.name,

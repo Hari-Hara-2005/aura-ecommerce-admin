@@ -1,4 +1,3 @@
-// Indian Rupee currency and number formatting utility
 
 export const formatINR = (amount) => {
   const num = Number(amount || 0);

@@ -35,7 +35,6 @@ export default function Analytics() {
         const products = productsRes?.products || (Array.isArray(productsRes) ? productsRes : []);
         const users = Array.isArray(usersRes) ? usersRes : [];
 
-        // 1. Revenue & AOV
         const validOrders = orders.filter((o) => o.status !== 'Cancelled');
         const revenue = validOrders.reduce(
           (sum, o) => sum + Number(o.pricing?.total || o.total_amount || 0),
@@ -43,7 +42,6 @@ export default function Analytics() {
         );
         const aov = validOrders.length > 0 ? revenue / validOrders.length : 0;
 
-        // 2. Payment Method Breakdown from real orders
         const paymentMap = {};
         orders.forEach((o) => {
           const method = o.payment_method || (o.payment?.gateway) || 'Razorpay';
@@ -65,7 +63,6 @@ export default function Analytics() {
           };
         });
 
-        // 3. Real Category Breakdown from database
         const totalProds = products.length;
         const categoryBreakdown = categories.map((cat, idx) => {
           const count = Number(cat.product_count) || products.filter(
@@ -81,7 +78,6 @@ export default function Analytics() {
           };
         });
 
-        // 4. Order Status Pipeline Breakdown
         const statusMap = { Confirmed: 0, Processing: 0, Shipped: 0, Delivered: 0, Cancelled: 0 };
         orders.forEach((o) => {
           const st = o.status || 'Confirmed';

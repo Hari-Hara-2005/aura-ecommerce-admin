@@ -198,7 +198,6 @@ export const productService = {
       category_id: product.category_id,
     };
     
-    // If UUID exists (not temporary/mock number)
     if (product.id && typeof product.id === 'string' && product.id.length > 20) {
       const r = await apiClient.put(`/product/${product.id}`, payload);
       return r.data?.data || r.data;
