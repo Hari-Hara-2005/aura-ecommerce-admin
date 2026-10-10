@@ -1,14 +1,17 @@
 @import "tailwindcss";
+
 @layer base {
   body {
-    @apply bg-slate-950 text-slate-100 font-sans antialiased min-h-screen;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased min-h-screen;
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 }
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #0f172a; }
-::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #475569; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
 .cl-footerAction,
 .cl-footerActionLink,
 .cl-footerActionText,
@@ -17,6 +20,7 @@
 [data-localization-key="signIn.start.actionLink__signUp"] {
   display: none !important;
 }
+
 .cl-socialButtons,
 .cl-socialButtonsRoot,
 .cl-socialButtonsBlockButton,

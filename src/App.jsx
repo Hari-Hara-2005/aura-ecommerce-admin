@@ -10,6 +10,7 @@ import Orders from './pages/Orders';
 import Users from './pages/Users';
 import Analytics from './pages/Analytics';
 import Coupons from './pages/Coupons';
+import Categories from './pages/Categories';
 import Settings from './pages/Settings';
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
           >
             <Route index element={<Dashboard />} />
             <Route path="products" element={<Products />} />
+            <Route path="categories" element={<Categories />} />
             <Route path="orders" element={<Orders />} />
             <Route path="users" element={<Users />} />
             <Route path="analytics" element={<Analytics />} />

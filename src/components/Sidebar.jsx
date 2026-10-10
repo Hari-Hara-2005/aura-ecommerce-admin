@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Package, Users, ShoppingCart, Settings,
-  ChevronLeft, ChevronRight, TrendingUp, Tag, BarChart3,
-  Bell, LogOut, Sparkles
+  ChevronLeft, ChevronRight, Tag, BarChart3,
+  Sparkles, Layers
 } from 'lucide-react';
-import { useAdminAuth } from '../context/AuthContext';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/products', label: 'Products', icon: Package },
+  { to: '/categories', label: 'Categories', icon: Layers },
   { to: '/orders', label: 'Orders', icon: ShoppingCart },
   { to: '/users', label: 'Customers', icon: Users },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
@@ -25,18 +25,18 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen z-50 flex flex-col transition-all duration-300 ease-in-out bg-slate-900/80 backdrop-blur-xl border-r border-slate-800/60 ${
+      className={`fixed left-0 top-0 h-screen z-50 flex flex-col transition-all duration-300 ease-in-out bg-white/95 backdrop-blur-xl border-r border-slate-200/80 shadow-xs ${
         collapsed ? 'w-[72px]' : 'w-[260px]'
       }`}
     >
-      <div className="flex items-center gap-3 px-5 py-6 border-b border-slate-800/40">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shrink-0 shadow-lg shadow-violet-500/25">
+      <div className="flex items-center gap-3 px-5 py-6 border-b border-slate-200/80">
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center shrink-0 shadow-md shadow-violet-500/20">
           <Sparkles className="w-5 h-5 text-white" />
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
-            <h1 className="text-lg font-bold bg-gradient-to-r from-violet-300 to-fuchsia-300 bg-clip-text text-transparent tracking-tight">AURA</h1>
-            <p className="text-[10px] text-slate-500 tracking-widest uppercase -mt-0.5">Admin Console</p>
+            <h1 className="text-lg font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent tracking-tight">AURA</h1>
+            <p className="text-[10px] text-slate-500 tracking-widest uppercase font-semibold -mt-0.5">Admin Console</p>
           </div>
         )}
       </div>
@@ -53,14 +53,14 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
               to={item.to}
               className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 relative ${
                 isActive
-                  ? 'bg-gradient-to-r from-violet-600/20 to-fuchsia-600/15 text-white shadow-sm shadow-violet-500/10'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  ? 'bg-violet-50 text-violet-700 shadow-xs border border-violet-100 font-semibold'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
               }`}
             >
               {isActive && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-gradient-to-b from-violet-400 to-fuchsia-500" />
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-gradient-to-b from-violet-600 to-fuchsia-600" />
               )}
-              <Icon className={`w-5 h-5 shrink-0 transition ${isActive ? 'text-violet-400' : 'group-hover:text-violet-400'}`} />
+              <Icon className={`w-5 h-5 shrink-0 transition ${isActive ? 'text-violet-600' : 'text-slate-400 group-hover:text-violet-600'}`} />
               {!collapsed && <span>{item.label}</span>}
             </NavLink>
           );
@@ -69,7 +69,8 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
 
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="mx-3 mb-4 p-2 rounded-xl bg-slate-800/60 border border-slate-700/40 text-slate-400 hover:text-white hover:bg-slate-700/60 transition flex items-center justify-center"
+        className="mx-3 mb-4 p-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-200/80 transition flex items-center justify-center cursor-pointer"
+        aria-label="Toggle Sidebar"
       >
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>
