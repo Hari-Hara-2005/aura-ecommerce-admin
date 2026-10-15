@@ -77,13 +77,7 @@ export default function Login() {
             </div>
           )}
 
-          <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-            <span className="flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-emerald-600" />
-              <span>TLS 256-bit Encrypted</span>
-            </span>
-            <span className="font-mono text-slate-500">AURA-ADMIN-GATE</span>
-          </div>
+          
         </div>
 
         <div className="text-center mt-6">

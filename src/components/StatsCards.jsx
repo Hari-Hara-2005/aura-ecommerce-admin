@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { IndianRupee, ShoppingCart, Users, Package } from 'lucide-react';
 import { orderService, userService, productService } from '../services/api';
 import { formatINR } from '../utils/format';
@@ -53,6 +54,7 @@ export default function StatsCards() {
       value: formatINR(stats.totalRevenue),
       subtitle: `${stats.totalOrders} recorded orders`,
       icon: IndianRupee,
+      to: '/analytics',
       gradient: 'from-emerald-500 to-teal-600',
       shadow: 'shadow-emerald-500/20',
       tagColor: 'text-emerald-700 bg-emerald-50 border-emerald-200',
@@ -63,6 +65,7 @@ export default function StatsCards() {
       value: stats.totalOrders.toLocaleString('en-IN'),
       subtitle: 'Live database orders',
       icon: ShoppingCart,
+      to: '/orders',
       gradient: 'from-violet-500 to-purple-600',
       shadow: 'shadow-violet-500/20',
       tagColor: 'text-violet-700 bg-violet-50 border-violet-200',
@@ -73,6 +76,7 @@ export default function StatsCards() {
       value: stats.totalCustomers.toLocaleString('en-IN'),
       subtitle: 'Verified user accounts',
       icon: Users,
+      to: '/users',
       gradient: 'from-amber-500 to-orange-600',
       shadow: 'shadow-amber-500/20',
       tagColor: 'text-amber-700 bg-amber-50 border-amber-200',
@@ -83,6 +87,7 @@ export default function StatsCards() {
       value: stats.totalProducts.toLocaleString('en-IN'),
       subtitle: 'Active inventory items',
       icon: Package,
+      to: '/products',
       gradient: 'from-rose-500 to-pink-600',
       shadow: 'shadow-rose-500/20',
       tagColor: 'text-rose-700 bg-rose-50 border-rose-200',
@@ -94,9 +99,10 @@ export default function StatsCards() {
       {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <div
+          <Link
             key={card.key}
-            className="group relative bg-white border border-slate-200/80 rounded-2xl p-5 hover:border-slate-300 shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
+            to={card.to}
+            className="group relative bg-white border border-slate-200/80 rounded-2xl p-5 hover:border-slate-300 shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 block cursor-pointer"
           >
             <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
             
@@ -117,7 +123,7 @@ export default function StatsCards() {
                 <Icon className="w-5 h-5 text-white" />
               </div>
             </div>
-          </div>
+          </Link>
         );
       })}
     </div>

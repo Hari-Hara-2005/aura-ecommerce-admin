@@ -1,6 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import { orderService } from '../services/api';
+import { subscribeSocket } from '../services/socket';
 import {
   ShoppingCart, Search, CheckCircle2, Clock, Truck,
   XCircle, Eye, User, MapPin, CreditCard, IndianRupee,
@@ -17,10 +19,18 @@ const statusConfig = {
 };
 
 export default function Orders() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(() => searchParams.get('search') || '');
   const [statusFilter, setStatusFilter] = useState('ALL');
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q !== null && q !== search) {
+      setSearch(q);
+    }
+  }, [searchParams]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [toast, setToast] = useState('');
 
@@ -42,9 +52,27 @@ export default function Orders() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadOrders();
+
+    // Real-time WebSocket listeners
+    const unsubCreated = subscribeSocket('order:created', (newOrder) => {
+      loadOrders();
+      showToast(`⚡ Real-time: New order #${String(newOrder.id).slice(0, 8).toUpperCase()} received!`);
+    });
+
+    const unsubStatus = subscribeSocket('order:status_updated', (data) => {
+      setOrders((prev) =>
+        prev.map((o) => (o.id === data.orderId ? { ...o, status: data.status, payment_status: data.payment_status } : o))
+      );
+    });
+
+    return () => {
+      unsubCreated();
+      unsubStatus();
+    };
   }, []);
+
 
   const handleRefresh = () => {
     loadOrders();

@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, Search, LogOut, User } from 'lucide-react';
+import { Search, LogOut, User } from 'lucide-react';
 import { useAdminAuth } from '../context/AuthContext';
+import NotificationDropdown from './NotificationDropdown';
 
 export default function Header({ title, subtitle }) {
   const { user, isSignedIn, signOut, loginDemo } = useAdminAuth();
@@ -30,10 +31,7 @@ export default function Header({ title, subtitle }) {
             />
           </div>
 
-          <button className="relative p-2.5 rounded-xl bg-slate-100 border border-slate-200 hover:bg-slate-200/70 transition cursor-pointer" aria-label="Notifications">
-            <Bell className="w-4 h-4 text-slate-600" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-violet-600 ring-2 ring-white"></span>
-          </button>
+          <NotificationDropdown />
 
           {isSignedIn ? (
             <div className="flex items-center gap-3 pl-4 border-l border-slate-200">

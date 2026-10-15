@@ -1,19 +1,77 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import { productService } from '../services/api';
 import {
   Package, Search, Plus, Eye, Edit3, Trash2, X,
-  CheckCircle2, AlertTriangle, Star, IndianRupee
+  CheckCircle2, AlertTriangle, Star, IndianRupee, Filter
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
 
 export default function Products() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(() => searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
-  const [stockFilter, setStockFilter] = useState('ALL');
+  
+  const [lowStockThreshold] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('aura_store_settings') || '{}');
+      return Number(saved.lowStockThreshold) || 10;
+    } catch {
+      return 10;
+    }
+  });
+
+  const [stockFilter, setStockFilter] = useState(() => {
+    const fromUrl = searchParams.get('stock');
+    if (fromUrl && ['IN_STOCK', 'LOW_STOCK', 'OUT_OF_STOCK'].includes(fromUrl.toUpperCase())) {
+      return fromUrl.toUpperCase();
+    }
+    return 'ALL';
+  });
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q !== null && q !== search) {
+      setSearch(q);
+    }
+    const s = searchParams.get('stock');
+    if (s && ['IN_STOCK', 'LOW_STOCK', 'OUT_OF_STOCK'].includes(s.toUpperCase())) {
+      setStockFilter(s.toUpperCase());
+    } else if (!s && stockFilter !== 'ALL') {
+      setStockFilter('ALL');
+    }
+  }, [searchParams]);
+
+  const handleStockFilterClick = (filterType) => {
+    setStockFilter(prev => {
+      const next = prev === filterType ? 'ALL' : filterType;
+      const newParams = new URLSearchParams(searchParams);
+      if (next === 'ALL') {
+        newParams.delete('stock');
+      } else {
+        newParams.set('stock', next);
+      }
+      setSearchParams(newParams, { replace: true });
+      return next;
+    });
+  };
+
+  const handleStockSelectChange = (e) => {
+    const val = e.target.value;
+    setStockFilter(val);
+    const newParams = new URLSearchParams(searchParams);
+    if (val === 'ALL') {
+      newParams.delete('stock');
+    } else {
+      newParams.set('stock', val);
+    }
+    setSearchParams(newParams, { replace: true });
+  };
+
   const [sortBy, setSortBy] = useState('default');
   
   const [viewProduct, setViewProduct] = useState(null);
@@ -69,8 +127,8 @@ export default function Products() {
       const matchCategory = selectedCategory === 'ALL' || p.category === selectedCategory;
 
       let matchStock = true;
-      if (stockFilter === 'IN_STOCK') matchStock = (p.stock || 0) > 10;
-      else if (stockFilter === 'LOW_STOCK') matchStock = (p.stock || 0) > 0 && (p.stock || 0) <= 10;
+      if (stockFilter === 'IN_STOCK') matchStock = (p.stock || 0) > lowStockThreshold;
+      else if (stockFilter === 'LOW_STOCK') matchStock = (p.stock || 0) > 0 && (p.stock || 0) <= lowStockThreshold;
       else if (stockFilter === 'OUT_OF_STOCK') matchStock = (p.stock || 0) === 0;
 
       return matchSearch && matchCategory && matchStock;
@@ -82,10 +140,10 @@ export default function Products() {
     else if (sortBy === 'stock_desc') list.sort((a, b) => (b.stock || 0) - (a.stock || 0));
 
     return list;
-  }, [products, search, selectedCategory, stockFilter, sortBy]);
+  }, [products, search, selectedCategory, stockFilter, sortBy, lowStockThreshold]);
 
   const totalItems = products.length;
-  const lowStockCount = products.filter(p => (p.stock || 0) > 0 && (p.stock || 0) <= 10).length;
+  const lowStockCount = products.filter(p => (p.stock || 0) > 0 && (p.stock || 0) <= lowStockThreshold).length;
   const outOfStockCount = products.filter(p => (p.stock || 0) === 0).length;
   const avgPrice = totalItems > 0 ? (products.reduce((a, b) => a + (b.price || 0), 0) / totalItems) : 0;
 
@@ -166,45 +224,135 @@ export default function Products() {
 
       <div className="p-8 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          {/* Catalog Count */}
+          <div
+            onClick={() => handleStockFilterClick('ALL')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleStockFilterClick('ALL'); }}
+            className={`bg-white border rounded-2xl p-5 shadow-xs cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md select-none ${
+              stockFilter === 'ALL'
+                ? 'border-violet-300 ring-2 ring-violet-500/20 bg-violet-50/20'
+                : 'border-slate-200/80 hover:border-slate-300'
+            }`}
+            title="Click to view all products"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-slate-500 font-medium">Catalog Count</p>
                 <h3 className="text-2xl font-bold text-slate-900 mt-1">{totalItems}</h3>
-                <span className="text-xs text-slate-400 mt-1 inline-block">Active listed products</span>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-xs text-slate-400">Active listed products</span>
+                  {stockFilter === 'ALL' && (
+                    <span className="text-[10px] font-semibold text-violet-700 bg-violet-100 px-1.5 py-0.5 rounded">All</span>
+                  )}
+                </div>
               </div>
-              <div className="p-3 rounded-xl bg-violet-50 border border-violet-100 text-violet-600">
+              <div className={`p-3 rounded-xl border transition ${
+                stockFilter === 'ALL'
+                  ? 'bg-violet-600 border-violet-600 text-white shadow-sm'
+                  : 'bg-violet-50 border-violet-100 text-violet-600'
+              }`}>
                 <Package className="w-5 h-5" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          {/* Low Stock Warning */}
+          <div
+            onClick={() => handleStockFilterClick('LOW_STOCK')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleStockFilterClick('LOW_STOCK'); }}
+            className={`bg-white border rounded-2xl p-5 shadow-xs cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md select-none relative overflow-hidden ${
+              stockFilter === 'LOW_STOCK'
+                ? 'border-amber-400 ring-2 ring-amber-500 bg-amber-50/50 shadow-md'
+                : 'border-slate-200/80 hover:border-amber-300 hover:bg-amber-50/20'
+            }`}
+            title={`Click to show low stock products (≤ ${lowStockThreshold} units)`}
+          >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">Low Stock Warning</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm text-slate-500 font-medium">Low Stock Warning</p>
+                  {lowStockCount > 0 && (
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  )}
+                </div>
                 <h3 className="text-2xl font-bold text-amber-600 mt-1">{lowStockCount}</h3>
-                <span className="text-xs text-slate-400 mt-1 inline-block">&le; 10 units remaining</span>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-xs text-slate-400">&le; {lowStockThreshold} units remaining</span>
+                  {stockFilter === 'LOW_STOCK' && (
+                    <span className="text-[10px] font-bold text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-full">
+                      Filtered Active
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="p-3 rounded-xl bg-amber-50 border border-amber-100 text-amber-600">
+              <div className={`p-3 rounded-xl border transition ${
+                stockFilter === 'LOW_STOCK'
+                  ? 'bg-amber-500 border-amber-500 text-white shadow-sm'
+                  : 'bg-amber-50 border-amber-100 text-amber-600'
+              }`}>
                 <AlertTriangle className="w-5 h-5" />
               </div>
             </div>
+            {stockFilter === 'LOW_STOCK' && (
+              <div className="mt-3 pt-2.5 border-t border-amber-200/70 flex items-center justify-between text-xs text-amber-800">
+                <span className="font-medium">Showing low stock products</span>
+                <span className="underline text-[11px] hover:text-amber-950 font-semibold">Click to clear</span>
+              </div>
+            )}
           </div>
 
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          {/* Out of Stock */}
+          <div
+            onClick={() => handleStockFilterClick('OUT_OF_STOCK')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleStockFilterClick('OUT_OF_STOCK'); }}
+            className={`bg-white border rounded-2xl p-5 shadow-xs cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md select-none relative overflow-hidden ${
+              stockFilter === 'OUT_OF_STOCK'
+                ? 'border-rose-400 ring-2 ring-rose-500 bg-rose-50/50 shadow-md'
+                : 'border-slate-200/80 hover:border-rose-300 hover:bg-rose-50/20'
+            }`}
+            title="Click to show out of stock products"
+          >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">Out of Stock</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm text-slate-500 font-medium">Out of Stock</p>
+                  {outOfStockCount > 0 && (
+                    <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                  )}
+                </div>
                 <h3 className="text-2xl font-bold text-rose-600 mt-1">{outOfStockCount}</h3>
-                <span className="text-xs text-slate-400 mt-1 inline-block">Needs immediate reorder</span>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-xs text-slate-400">Needs immediate reorder</span>
+                  {stockFilter === 'OUT_OF_STOCK' && (
+                    <span className="text-[10px] font-bold text-rose-800 bg-rose-200/80 px-2 py-0.5 rounded-full">
+                      Filtered Active
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-100 text-rose-600">
+              <div className={`p-3 rounded-xl border transition ${
+                stockFilter === 'OUT_OF_STOCK'
+                  ? 'bg-rose-500 border-rose-500 text-white shadow-sm'
+                  : 'bg-rose-50 border-rose-100 text-rose-600'
+              }`}>
                 <AlertTriangle className="w-5 h-5" />
               </div>
             </div>
+            {stockFilter === 'OUT_OF_STOCK' && (
+              <div className="mt-3 pt-2.5 border-t border-rose-200/70 flex items-center justify-between text-xs text-rose-800">
+                <span className="font-medium">Showing out of stock products</span>
+                <span className="underline text-[11px] hover:text-rose-950 font-semibold">Click to clear</span>
+              </div>
+            )}
           </div>
 
+          {/* Average Unit Price */}
           <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
             <div className="flex items-center justify-between">
               <div>
@@ -218,6 +366,54 @@ export default function Products() {
             </div>
           </div>
         </div>
+
+        {/* Active Stock Filter Banner */}
+        {stockFilter !== 'ALL' && (
+          <div className={`flex items-center justify-between px-5 py-3 rounded-2xl border text-sm transition-all animate-in fade-in ${
+            stockFilter === 'LOW_STOCK'
+              ? 'bg-amber-50/80 border-amber-200 text-amber-900'
+              : stockFilter === 'OUT_OF_STOCK'
+              ? 'bg-rose-50/80 border-rose-200 text-rose-900'
+              : 'bg-emerald-50/80 border-emerald-200 text-emerald-900'
+          }`}>
+            <div className="flex items-center gap-2.5">
+              <span className={`w-2.5 h-2.5 rounded-full ${
+                stockFilter === 'LOW_STOCK'
+                  ? 'bg-amber-500'
+                  : stockFilter === 'OUT_OF_STOCK'
+                  ? 'bg-rose-500'
+                  : 'bg-emerald-500'
+              }`} />
+              <span className="font-medium">
+                Filtering by{' '}
+                <strong>
+                  {stockFilter === 'LOW_STOCK'
+                    ? `Low Stock (≤ ${lowStockThreshold} units)`
+                    : stockFilter === 'OUT_OF_STOCK'
+                    ? 'Out of Stock (0 units)'
+                    : `In Stock (> ${lowStockThreshold} units)`}
+                </strong>
+                {' — '}
+                {filteredProducts.length === 0
+                  ? 'No matching products found'
+                  : `Showing ${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''}`}
+              </span>
+            </div>
+            <button
+              onClick={() => handleStockFilterClick('ALL')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold text-xs transition cursor-pointer ${
+                stockFilter === 'LOW_STOCK'
+                  ? 'bg-amber-100 hover:bg-amber-200 text-amber-900'
+                  : stockFilter === 'OUT_OF_STOCK'
+                  ? 'bg-rose-100 hover:bg-rose-200 text-rose-900'
+                  : 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900'
+              }`}
+            >
+              <X className="w-3.5 h-3.5" />
+              Clear Filter (Show All)
+            </button>
+          </div>
+        )}
 
         <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex flex-col lg:flex-row gap-4 items-center justify-between">
           <div className="flex flex-1 flex-wrap items-center gap-3 w-full lg:w-auto">
@@ -251,12 +447,12 @@ export default function Products() {
 
             <select
               value={stockFilter}
-              onChange={e => setStockFilter(e.target.value)}
+              onChange={handleStockSelectChange}
               className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-3 py-2 focus:outline-none focus:bg-white focus:border-violet-500"
             >
               <option value="ALL">All Stock Levels</option>
-              <option value="IN_STOCK">In Stock (&gt;10)</option>
-              <option value="LOW_STOCK">Low Stock (&le;10)</option>
+              <option value="IN_STOCK">In Stock (&gt;{lowStockThreshold})</option>
+              <option value="LOW_STOCK">Low Stock (&le;{lowStockThreshold})</option>
               <option value="OUT_OF_STOCK">Out of Stock (0)</option>
             </select>
 
@@ -303,7 +499,7 @@ export default function Products() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filteredProducts.map(product => {
-                    const isLow = (product.stock || 0) > 0 && (product.stock || 0) <= 10;
+                    const isLow = (product.stock || 0) > 0 && (product.stock || 0) <= lowStockThreshold;
                     const isOut = (product.stock || 0) === 0;
 
                     return (
@@ -348,16 +544,21 @@ export default function Products() {
 
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
-                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold ${
-                              isOut
-                                ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                                : isLow
-                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                                : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            }`}>
+                            <button
+                              type="button"
+                              onClick={() => handleStockFilterClick(isOut ? 'OUT_OF_STOCK' : isLow ? 'LOW_STOCK' : 'IN_STOCK')}
+                              title={`Click to filter by ${isOut ? 'Out of Stock' : isLow ? 'Low Stock' : 'In Stock'}`}
+                              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer transition hover:opacity-80 ${
+                                isOut
+                                  ? 'bg-rose-50 text-rose-700 border border-rose-200 hover:border-rose-300'
+                                  : isLow
+                                  ? 'bg-amber-50 text-amber-700 border border-amber-200 hover:border-amber-300'
+                                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:border-emerald-300'
+                              }`}
+                            >
                               <span className={`w-1.5 h-1.5 rounded-full ${isOut ? 'bg-rose-500' : isLow ? 'bg-amber-500' : 'bg-emerald-500'}`} />
                               {isOut ? 'Out of stock' : `${product.stock} in stock`}
-                            </span>
+                            </button>
                           </div>
                         </td>
 
@@ -402,7 +603,24 @@ export default function Products() {
                   {filteredProducts.length === 0 && (
                     <tr>
                       <td colSpan={6} className="text-center py-16 text-slate-400">
-                        No products match your current search or filter.
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <Package className="w-8 h-8 text-slate-300 mb-1" />
+                          <p className="font-medium text-slate-600">
+                            {stockFilter === 'LOW_STOCK'
+                              ? `No products currently have low stock (≤ ${lowStockThreshold} units).`
+                              : stockFilter === 'OUT_OF_STOCK'
+                              ? 'No products are currently out of stock.'
+                              : 'No products match your current search or filter.'}
+                          </p>
+                          {stockFilter !== 'ALL' && (
+                            <button
+                              onClick={() => handleStockFilterClick('ALL')}
+                              className="text-xs text-violet-600 hover:text-violet-700 font-semibold underline mt-1 cursor-pointer"
+                            >
+                              Show all products
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -468,13 +686,13 @@ export default function Products() {
                 <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
                   <div className="flex justify-between text-xs">
                     <span className="text-slate-500">Inventory Status</span>
-                    <span className={`font-semibold ${viewProduct.stock > 10 ? 'text-emerald-700' : 'text-amber-700'}`}>
+                    <span className={`font-semibold ${viewProduct.stock > lowStockThreshold ? 'text-emerald-700' : 'text-amber-700'}`}>
                       {viewProduct.stock} units available
                     </span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
                     <div
-                      className={`h-full rounded-full ${viewProduct.stock > 10 ? 'bg-emerald-500' : 'bg-amber-500'}`}
+                      className={`h-full rounded-full ${viewProduct.stock > lowStockThreshold ? 'bg-emerald-500' : 'bg-amber-500'}`}
                       style={{ width: `${Math.min(100, (viewProduct.stock / 50) * 100)}%` }}
                     />
                   </div>

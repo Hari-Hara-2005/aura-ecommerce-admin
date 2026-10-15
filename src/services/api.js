@@ -252,3 +252,52 @@ export const couponService = {
     return list;
   }
 };
+
+export const notificationService = {
+  async getStatus(adminId = 'default_admin') {
+    try {
+      const res = await apiClient.get('/notifications/status', { params: { admin_id: adminId } });
+      return res.data || { readKeys: [], dismissedKeys: [] };
+    } catch (e) {
+      console.warn('[Admin API] getNotificationStatus error:', e.message);
+      return { readKeys: [], dismissedKeys: [] };
+    }
+  },
+
+  async markRead(keyOrKeys, adminId = 'default_admin') {
+    try {
+      const payload = Array.isArray(keyOrKeys)
+        ? { keys: keyOrKeys, admin_id: adminId }
+        : { key: keyOrKeys, admin_id: adminId };
+      const res = await apiClient.post('/notifications/read', payload);
+      return res.data;
+    } catch (e) {
+      console.warn('[Admin API] markRead error:', e.message);
+      return null;
+    }
+  },
+
+  async markUnread(key, adminId = 'default_admin') {
+    try {
+      const res = await apiClient.post('/notifications/unread', { key, admin_id: adminId });
+      return res.data;
+    } catch (e) {
+      console.warn('[Admin API] markUnread error:', e.message);
+      return null;
+    }
+  },
+
+  async dismiss(keyOrKeys, adminId = 'default_admin') {
+    try {
+      const payload = Array.isArray(keyOrKeys)
+        ? { keys: keyOrKeys, admin_id: adminId }
+        : { key: keyOrKeys, admin_id: adminId };
+      const res = await apiClient.post('/notifications/dismiss', payload);
+      return res.data;
+    } catch (e) {
+      console.warn('[Admin API] dismiss error:', e.message);
+      return null;
+    }
+  },
+};
+
