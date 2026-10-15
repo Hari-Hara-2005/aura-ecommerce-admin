@@ -6,9 +6,11 @@ import { subscribeSocket } from '../services/socket';
 import {
   ShoppingCart, Search, CheckCircle2, Clock, Truck,
   XCircle, Eye, User, MapPin, CreditCard, IndianRupee,
-  X, Calendar, Download, RefreshCw
+  X, Calendar, Download, RefreshCw, Lock
 } from 'lucide-react';
 import { formatINR } from '../utils/format';
+
+const isFinalStatus = (status) => status === 'Delivered' || status === 'Cancelled';
 
 const statusConfig = {
   Confirmed: { color: 'text-blue-700 bg-blue-50 border-blue-200', icon: CheckCircle2, label: 'Confirmed' },
@@ -101,6 +103,21 @@ export default function Orders() {
   const grossRevenue = orders.reduce((sum, o) => sum + (o.pricing?.total || o.total_amount || 0), 0);
 
   const handleStatusChange = async (orderId, newStatus) => {
+    const currentOrder = orders.find(o => o.id === orderId);
+    if (currentOrder && isFinalStatus(currentOrder.status)) {
+      showToast(`Order is already ${currentOrder.status} and cannot be modified.`);
+      return;
+    }
+
+    if (isFinalStatus(newStatus)) {
+      const confirmMsg = newStatus === 'Cancelled'
+        ? 'Are you sure you want to cancel this order? Once cancelled, the status cannot be changed and stock will be returned.'
+        : 'Are you sure you want to mark this order as Delivered? Once delivered, the fulfillment status cannot be changed.';
+      if (!window.confirm(confirmMsg)) {
+        return;
+      }
+    }
+
     try {
       await orderService.updateOrderStatus(orderId, newStatus);
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
@@ -114,7 +131,8 @@ export default function Orders() {
       }
     } catch (err) {
       console.error('Failed to update order status:', err);
-      showToast('Failed to update status');
+      const errMsg = err?.response?.data?.message || err?.message || 'Failed to update status';
+      showToast(errMsg);
     }
   };
 
@@ -297,17 +315,28 @@ export default function Orders() {
                       </td>
 
                       <td className="px-6 py-4">
-                        <select
-                          value={order.status}
-                          onChange={e => handleStatusChange(order.id, e.target.value)}
-                          className={`text-xs font-semibold px-2.5 py-1 rounded-lg border focus:outline-none cursor-pointer ${cfg.color}`}
-                        >
-                          <option value="Confirmed">Confirmed</option>
-                          <option value="Processing">Processing</option>
-                          <option value="Shipped">Shipped</option>
-                          <option value="Delivered">Delivered</option>
-                          <option value="Cancelled">Cancelled</option>
-                        </select>
+                        {isFinalStatus(order.status) ? (
+                          <div
+                            className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg border cursor-not-allowed select-none ${cfg.color}`}
+                            title={`Order fulfillment is ${order.status} (Locked - cannot be changed)`}
+                          >
+                            <Icon className="w-3.5 h-3.5" />
+                            <span>{order.status}</span>
+                            <Lock className="w-3 h-3 opacity-60 ml-0.5" />
+                          </div>
+                        ) : (
+                          <select
+                            value={order.status}
+                            onChange={e => handleStatusChange(order.id, e.target.value)}
+                            className={`text-xs font-semibold px-2.5 py-1 rounded-lg border focus:outline-none cursor-pointer ${cfg.color}`}
+                          >
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                          </select>
+                        )}
                       </td>
 
                       <td className="px-6 py-4 text-right">
@@ -364,17 +393,29 @@ export default function Orders() {
 
               <div className="flex items-center gap-2">
                 <span className="text-xs text-slate-600 font-medium">Change Status:</span>
-                <select
-                  value={selectedOrder.status}
-                  onChange={e => handleStatusChange(selectedOrder.id, e.target.value)}
-                  className="bg-slate-50 text-slate-800 border border-slate-200 text-xs font-semibold rounded-xl px-3 py-1.5 focus:outline-none focus:border-violet-500"
-                >
-                  <option value="Confirmed">Confirmed</option>
-                  <option value="Processing">Processing</option>
-                  <option value="Shipped">Shipped</option>
-                  <option value="Delivered">Delivered</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
+                {isFinalStatus(selectedOrder.status) ? (
+                  <span
+                    className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border select-none cursor-not-allowed ${
+                      statusConfig[selectedOrder.status]?.color || statusConfig.Processing.color
+                    }`}
+                    title={`Order is ${selectedOrder.status} and cannot be modified`}
+                  >
+                    <Lock className="w-3.5 h-3.5 opacity-70" />
+                    <span>{selectedOrder.status} (Locked)</span>
+                  </span>
+                ) : (
+                  <select
+                    value={selectedOrder.status}
+                    onChange={e => handleStatusChange(selectedOrder.id, e.target.value)}
+                    className="bg-slate-50 text-slate-800 border border-slate-200 text-xs font-semibold rounded-xl px-3 py-1.5 focus:outline-none focus:border-violet-500 cursor-pointer"
+                  >
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                )}
               </div>
             </div>
 
