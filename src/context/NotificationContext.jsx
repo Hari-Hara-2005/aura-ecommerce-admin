@@ -26,9 +26,6 @@ function saveStoredIds(key, ids) {
   } catch {}
 }
 
-/**
- * Clean synthesizer chime using Web Audio API for incoming live alerts
- */
 function playNotificationChime() {
   try {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -38,8 +35,8 @@ function playNotificationChime() {
     const gain = ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
 
     gain.gain.setValueAtTime(0.12, ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
@@ -50,7 +47,6 @@ function playNotificationChime() {
     osc.start();
     osc.stop(ctx.currentTime + 0.35);
   } catch {
-    // Autoplay or background audio policy safely ignored
   }
 }
 
@@ -71,9 +67,7 @@ export function NotificationProvider({ children }) {
   const [readIds, setReadIds] = useState(() => getStoredIds(STORAGE_KEY_READ));
   const [dismissedIds, setDismissedIds] = useState(() => getStoredIds(STORAGE_KEY_DISMISSED));
 
-  // WebSocket Live Connection State
   const [socketConnected, setSocketConnected] = useState(false);
-
 
   const loadThreshold = () => {
     try {
@@ -96,7 +90,6 @@ export function NotificationProvider({ children }) {
         notificationService.getStatus(adminId),
       ]);
 
-      // Sync read and dismissed keys from PostgreSQL database
       if (statusRes.status === 'fulfilled' && statusRes.value) {
         const { readKeys = [], dismissedKeys = [] } = statusRes.value;
 
@@ -119,7 +112,6 @@ export function NotificationProvider({ children }) {
 
       const items = [];
 
-      // 1. INVENTORY NOTIFICATIONS (Out of Stock & Low Stock)
       rawProducts.forEach((p) => {
         const stockNum = Number(p.stock !== undefined ? p.stock : 0);
         const name = p.name || p.title || 'Product';
@@ -131,7 +123,7 @@ export function NotificationProvider({ children }) {
             type: 'inventory',
             subType: 'out_of_stock',
             severity: 'danger',
-            priority: 1, // High urgency
+            priority: 1,
             title: `Out of Stock: ${name}`,
             message: `Inventory depleted (0 units remaining). Immediate restock recommended.`,
             meta: `Price: ${formatINR(p.price || 0)} • Category: ${p.category_name || p.category || 'General'}`,
@@ -156,7 +148,6 @@ export function NotificationProvider({ children }) {
         }
       });
 
-      // 2. ORDER NOTIFICATIONS (New & Recent Orders)
       rawOrders.forEach((o) => {
         const oId = o.id || o._id || 'unknown';
         const shortId = String(oId).slice(0, 8).toUpperCase();
@@ -181,7 +172,6 @@ export function NotificationProvider({ children }) {
         });
       });
 
-      // 3. CUSTOMER NOTIFICATIONS (New Registered Shoppers)
       rawUsers.forEach((u) => {
         const uId = u.id || u.clerk_user_id || u.email;
         const name = u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'New Shopper';
@@ -204,7 +194,6 @@ export function NotificationProvider({ children }) {
         });
       });
 
-      // Sort notifications by timestamp descending (newest first)
       items.sort((a, b) => {
         const timeA = new Date(a.timestamp).getTime() || 0;
         const timeB = new Date(b.timestamp).getTime() || 0;
@@ -220,7 +209,6 @@ export function NotificationProvider({ children }) {
     }
   }, [adminId]);
 
-  // Initial load and backup auto-polling every 60 seconds
   useEffect(() => {
     fetchNotificationData();
 
@@ -239,7 +227,6 @@ export function NotificationProvider({ children }) {
     };
   }, [fetchNotificationData]);
 
-  // Live WebSocket Real-Time Subscription
   useEffect(() => {
     const s = getSocket();
 
@@ -253,7 +240,6 @@ export function NotificationProvider({ children }) {
     s.on('connect', handleConnect);
     s.on('disconnect', handleDisconnect);
 
-    // Incoming real-time push notification from server
     const handleIncomingNotification = (newNotif) => {
       if (!newNotif || !newNotif.id) return;
       playNotificationChime();
@@ -267,7 +253,6 @@ export function NotificationProvider({ children }) {
       });
     };
 
-    // Real-time synchronization of read/dismiss state across multiple admin tabs
     const handleStateSync = (payload) => {
       if (!payload) return;
       if (payload.action === 'markRead') {
@@ -295,8 +280,6 @@ export function NotificationProvider({ children }) {
     };
   }, []);
 
-
-  // Read / Dismiss actions with Database & WebSocket Sync
   const markAsRead = useCallback((id) => {
     setReadIds((prev) => {
       if (prev.includes(id)) return prev;
@@ -304,7 +287,6 @@ export function NotificationProvider({ children }) {
       saveStoredIds(STORAGE_KEY_READ, next);
       return next;
     });
-    // Sync with PostgreSQL
     notificationService.markRead(id, adminId);
   }, [adminId]);
 
@@ -314,7 +296,6 @@ export function NotificationProvider({ children }) {
       saveStoredIds(STORAGE_KEY_READ, next);
       return next;
     });
-    // Sync with PostgreSQL
     notificationService.markUnread(id, adminId);
   }, [adminId]);
 
@@ -326,7 +307,6 @@ export function NotificationProvider({ children }) {
         saveStoredIds(STORAGE_KEY_READ, combined);
         return combined;
       });
-      // Sync with PostgreSQL
       notificationService.markRead(activeIds, adminId);
       return current;
     });
@@ -339,7 +319,6 @@ export function NotificationProvider({ children }) {
       saveStoredIds(STORAGE_KEY_DISMISSED, next);
       return next;
     });
-    // Sync with PostgreSQL
     notificationService.dismiss(id, adminId);
   }, [adminId]);
 
@@ -351,13 +330,11 @@ export function NotificationProvider({ children }) {
         saveStoredIds(STORAGE_KEY_DISMISSED, combined);
         return combined;
       });
-      // Sync with PostgreSQL
       notificationService.dismiss(ids, adminId);
       return current;
     });
   }, [adminId]);
 
-  // Filter out dismissed notifications and attach isRead and timeAgo
   const activeNotifications = useMemo(() => {
     const dismissedSet = new Set(dismissedIds);
     const readSet = new Set(readIds);
@@ -399,7 +376,6 @@ export function NotificationProvider({ children }) {
     dismissNotification,
     clearAll,
   };
-
 
   return (
     <NotificationContext.Provider value={value}>

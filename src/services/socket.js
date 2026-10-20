@@ -8,9 +8,6 @@ const SOCKET_URL =
 
 let socket = null;
 
-/**
- * Get or initialize singleton Socket.io client instance
- */
 export function getSocket() {
   if (!socket) {
     socket = io(SOCKET_URL, {
@@ -24,7 +21,6 @@ export function getSocket() {
     });
 
     socket.on('connect', () => {
-      // Join the admin notification channel
       socket.emit('join:admin');
     });
 
@@ -36,9 +32,6 @@ export function getSocket() {
   return socket;
 }
 
-/**
- * Subscribe to an event
- */
 export function subscribeSocket(event, callback) {
   const s = getSocket();
   s.on(event, callback);
@@ -48,9 +41,6 @@ export function subscribeSocket(event, callback) {
   };
 }
 
-/**
- * Emit an event
- */
 export function emitSocket(event, data, callback) {
   const s = getSocket();
   s.emit(event, data, callback);

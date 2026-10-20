@@ -57,7 +57,6 @@ export default function Orders() {
   useEffect(() => {
     loadOrders();
 
-    // Real-time WebSocket listeners
     const unsubCreated = subscribeSocket('order:created', (newOrder) => {
       loadOrders();
       showToast(`⚡ Real-time: New order #${String(newOrder.id).slice(0, 8).toUpperCase()} received!`);
@@ -74,7 +73,6 @@ export default function Orders() {
       unsubStatus();
     };
   }, []);
-
 
   const handleRefresh = () => {
     loadOrders();

@@ -224,7 +224,6 @@ export default function Products() {
 
       <div className="p-8 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-          {/* Catalog Count */}
           <div
             onClick={() => handleStockFilterClick('ALL')}
             role="button"
@@ -258,7 +257,6 @@ export default function Products() {
             </div>
           </div>
 
-          {/* Low Stock Warning */}
           <div
             onClick={() => handleStockFilterClick('LOW_STOCK')}
             role="button"
@@ -305,7 +303,6 @@ export default function Products() {
             )}
           </div>
 
-          {/* Out of Stock */}
           <div
             onClick={() => handleStockFilterClick('OUT_OF_STOCK')}
             role="button"
@@ -352,7 +349,6 @@ export default function Products() {
             )}
           </div>
 
-          {/* Average Unit Price */}
           <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
             <div className="flex items-center justify-between">
               <div>
@@ -367,7 +363,6 @@ export default function Products() {
           </div>
         </div>
 
-        {/* Active Stock Filter Banner */}
         {stockFilter !== 'ALL' && (
           <div className={`flex items-center justify-between px-5 py-3 rounded-2xl border text-sm transition-all animate-in fade-in ${
             stockFilter === 'LOW_STOCK'

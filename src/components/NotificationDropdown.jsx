@@ -8,7 +8,7 @@ import { useNotifications } from '../context/NotificationContext';
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('all'); // 'all' | 'order' | 'inventory' | 'customer'
+  const [activeTab, setActiveTab] = useState('all');
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -25,7 +25,6 @@ export default function NotificationDropdown() {
     clearAll,
   } = useNotifications();
 
-  // Close dropdown on outside click or Escape key
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -49,7 +48,6 @@ export default function NotificationDropdown() {
     };
   }, [isOpen]);
 
-  // Filter out any temporary test alerts and apply active tab
   const filteredNotifications = notifications
     .filter((n) => !n.id?.startsWith('test_'))
     .filter((n) => {
@@ -96,7 +94,6 @@ export default function NotificationDropdown() {
         borderAccent: 'border-l-indigo-500',
       };
     }
-    // customer
     return {
       icon: UserPlus,
       iconColor: 'text-emerald-600',
@@ -111,7 +108,6 @@ export default function NotificationDropdown() {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      {/* Trigger Bell Button */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className={`relative p-2.5 rounded-xl border transition cursor-pointer flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-violet-500/30 ${
@@ -134,10 +130,8 @@ export default function NotificationDropdown() {
         )}
       </button>
 
-      {/* Floating Notification Popover Drawer */}
       {isOpen && (
         <div className="absolute right-0 top-full mt-3 w-96 sm:w-[440px] max-w-[calc(100vw-1.5rem)] bg-white/95 backdrop-blur-2xl rounded-2xl shadow-2xl border border-slate-200/90 z-50 overflow-hidden ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-150 flex flex-col max-h-[85vh]">
-          {/* Header Bar */}
           <div className="px-5 py-4 border-b border-slate-100 bg-slate-50/70">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
@@ -161,7 +155,6 @@ export default function NotificationDropdown() {
                 </div>
               </div>
 
-              {/* Header Action Buttons */}
               <div className="flex items-center gap-1.5">
                 <button
                   onClick={() => refresh()}
@@ -186,7 +179,6 @@ export default function NotificationDropdown() {
               </div>
             </div>
 
-            {/* Filter Tabs */}
             <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-slate-200/70 overflow-x-auto no-scrollbar">
               <button
                 onClick={() => setActiveTab('all')}
@@ -237,7 +229,6 @@ export default function NotificationDropdown() {
             </div>
           </div>
 
-          {/* Notifications Scrollable Feed */}
           <div className="flex-1 overflow-y-auto divide-y divide-slate-100 max-h-[440px]">
             {filteredNotifications.length === 0 ? (
               <div className="py-12 px-6 text-center">
@@ -263,7 +254,6 @@ export default function NotificationDropdown() {
                       n.isRead ? 'bg-white hover:bg-slate-50/80 opacity-75' : 'bg-slate-50/50 hover:bg-violet-50/30'
                     }`}
                   >
-                    {/* Category Icon */}
                     <div
                       onClick={() => handleNotificationClick(n)}
                       className={`w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 cursor-pointer ${config.iconBg}`}
@@ -271,7 +261,6 @@ export default function NotificationDropdown() {
                       <IconComponent className={`w-4 h-4 ${config.iconColor}`} />
                     </div>
 
-                    {/* Content */}
                     <div className="flex-1 min-w-0" onClick={() => handleNotificationClick(n)}>
                       <div className="flex items-center justify-between gap-2 mb-1">
                         <div className="flex items-center gap-1.5 flex-wrap">
@@ -296,7 +285,6 @@ export default function NotificationDropdown() {
                       </p>
                     </div>
 
-                    {/* Hover Quick Actions */}
                     <div className="flex flex-col items-center justify-between py-0.5 shrink-0">
                       <button
                         onClick={(e) => {
@@ -334,7 +322,6 @@ export default function NotificationDropdown() {
             )}
           </div>
 
-          {/* Clean Footer Bar */}
           {realActiveNotifications.length > 0 && (
             <div className="px-5 py-3 border-t border-slate-100 bg-slate-50/70 flex items-center justify-between text-xs">
               <span className="text-[11px] text-slate-500 font-medium">
