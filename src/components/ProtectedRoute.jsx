@@ -10,12 +10,12 @@ export default function ProtectedRoute({ children }) {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-slate-700">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-violet-500/25 mb-4 animate-pulse">
+      <div className="min-h-screen bg-neutral-50 flex flex-col items-center justify-center text-neutral-800">
+        <div className="w-12 h-12 rounded-lg bg-black flex items-center justify-center mb-4">
           <Sparkles className="w-6 h-6 text-white" />
         </div>
-        <div className="w-6 h-6 border-2 border-violet-600 border-t-transparent rounded-full animate-spin mb-3" />
-        <p className="text-sm font-medium text-slate-500">Verifying Admin Clearance...</p>
+        <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin mb-3" />
+        <p className="text-sm font-medium text-neutral-600">Verifying Admin Clearance...</p>
       </div>
     );
   }
@@ -40,35 +40,33 @@ export default function ProtectedRoute({ children }) {
     };
 
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 relative overflow-hidden text-slate-900">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-rose-500/10 rounded-full blur-[140px] pointer-events-none" />
-
-        <div className="relative z-10 w-full max-w-md bg-white border border-rose-200 rounded-3xl p-8 shadow-2xl text-center">
-          <div className="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto mb-4">
-            <ShieldAlert className="w-8 h-8" />
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4 text-black">
+        <div className="w-full max-w-md bg-white border border-neutral-300 rounded-lg p-8 text-center shadow-lg">
+          <div className="w-12 h-12 rounded-lg bg-neutral-100 border border-neutral-300 text-black flex items-center justify-center mx-auto mb-4">
+            <ShieldAlert className="w-6 h-6" />
           </div>
 
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">Access Denied (403)</h2>
-          <p className="text-xs text-rose-600 font-semibold uppercase tracking-wider mt-1">Administrator Privileges Required</p>
+          <h2 className="text-xl font-bold text-black tracking-tight">Access Denied (403)</h2>
+          <p className="text-xs text-neutral-600 font-semibold uppercase tracking-wider mt-1">Administrator Privileges Required</p>
 
-          <div className="my-5 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left space-y-1.5">
-            <span className="text-[11px] text-slate-500 font-medium">Signed in account:</span>
-            <p className="text-sm font-bold text-slate-900 font-mono break-all">{userEmail}</p>
-            <p className="text-[11px] text-slate-500 pt-1 leading-relaxed">
+          <div className="my-5 p-4 rounded-lg bg-neutral-50 border border-neutral-200 text-left space-y-1.5">
+            <span className="text-[11px] text-neutral-500 font-medium">Signed in account:</span>
+            <p className="text-sm font-bold text-black font-mono break-all">{userEmail}</p>
+            <p className="text-[11px] text-neutral-500 pt-1 leading-relaxed">
               This account is not on the authorized administrator allowlist. Self-registration is disabled for security.
             </p>
           </div>
 
           <div className="space-y-3">
             {authorizedSuccess ? (
-              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-2">
+              <div className="p-3 bg-neutral-100 border border-neutral-300 text-black rounded-lg text-xs font-semibold flex items-center justify-center gap-2">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>Admin privileges granted! Loading dashboard...</span>
               </div>
             ) : (
               <button
                 onClick={handleGrantAccess}
-                className="w-full py-2.5 px-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-semibold rounded-xl text-xs shadow-lg shadow-violet-500/20 flex items-center justify-center gap-2 transition cursor-pointer"
+                className="w-full py-2.5 px-4 bg-black hover:bg-neutral-800 text-white font-semibold rounded-lg text-xs flex items-center justify-center gap-2 transition cursor-pointer"
               >
                 <UserCheck className="w-4 h-4" />
                 <span>Authorize This Email as Administrator</span>
@@ -77,15 +75,15 @@ export default function ProtectedRoute({ children }) {
 
             <button
               onClick={signOut}
-              className="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-xs border border-slate-200 flex items-center justify-center gap-2 transition cursor-pointer"
+              className="w-full py-2.5 px-4 bg-white hover:bg-neutral-100 text-neutral-800 font-medium rounded-lg text-xs border border-neutral-300 flex items-center justify-center gap-2 transition cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Sign Out & Try Another Account</span>
             </button>
           </div>
 
-          <p className="text-[10px] text-slate-400 mt-5">
-            You can also add this email to <code className="text-slate-600 font-mono">VITE_ADMIN_EMAILS</code> in <code className="text-slate-600 font-mono">Admin/.env</code>.
+          <p className="text-[10px] text-neutral-400 mt-5">
+            You can also add this email to <code className="text-neutral-800 font-mono">VITE_ADMIN_EMAILS</code> in <code className="text-neutral-800 font-mono">Admin/.env</code>.
           </p>
         </div>
       </div>

@@ -21,6 +21,7 @@ export default function Users() {
       setSearch(q);
     }
   }, [searchParams]);
+
   const [roleFilter, setRoleFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedUser, setSelectedUser] = useState(null);
@@ -71,7 +72,7 @@ export default function Users() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadUsers();
   }, []);
 
@@ -164,72 +165,72 @@ export default function Users() {
   }, [selectedUser, allOrders]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080C14] text-slate-900 dark:text-slate-100 transition-colors duration-200">
       <Header title="Customers & Users" subtitle="Manage registered Clerk shoppers, customer tiers, and purchase histories." />
 
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-2 text-sm font-medium animate-in fade-in slide-in-from-bottom-2">
-          <CheckCircle2 className="w-4 h-4 text-white" />
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900/95 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 text-sm font-medium backdrop-blur-md animate-fade-in border border-slate-700/50 dark:border-slate-200">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
           <span>{toast}</span>
         </div>
       )}
 
-      <div className="p-8 space-y-6">
+      <div className="p-6 md:p-8 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          <div className="bg-white/80 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-xs transition-all hover:shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">Total Customers</p>
-                <h3 className="text-2xl font-bold text-slate-900 mt-1">{totalCustomers}</h3>
-                <span className="text-xs text-emerald-600 font-medium mt-1 inline-block">Registered in Clerk & DB</span>
+                <p className="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400">Total Customers</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{totalCustomers}</h3>
+                <span className="text-xs text-slate-400 mt-1 inline-block">Registered in Clerk & DB</span>
               </div>
-              <div className="p-3 rounded-xl bg-violet-50 border border-violet-100 text-violet-600">
+              <div className="p-3 rounded-xl bg-violet-100 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400 border border-violet-200/50 dark:border-violet-800/40">
                 <UsersIcon className="w-5 h-5" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          <div className="bg-white/80 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-xs transition-all hover:shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">VIP Members</p>
-                <h3 className="text-2xl font-bold text-amber-600 mt-1">{vipCount}</h3>
+                <p className="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400">VIP Members</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{vipCount}</h3>
                 <span className="text-xs text-slate-400 mt-1 inline-block">High-value shoppers</span>
               </div>
-              <div className="p-3 rounded-xl bg-amber-50 border border-amber-100 text-amber-600">
+              <div className="p-3 rounded-xl bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200/50 dark:border-amber-800/40">
                 <Star className="w-5 h-5" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          <div className="bg-white/80 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-xs transition-all hover:shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">Cumulative LTV</p>
-                <h3 className="text-2xl font-bold text-slate-900 mt-1">{formatINR(totalSpentAll)}</h3>
+                <p className="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400">Cumulative LTV</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1 font-mono">{formatINR(totalSpentAll)}</h3>
                 <span className="text-xs text-slate-400 mt-1 inline-block">Total revenue generated</span>
               </div>
-              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600">
+              <div className="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/40">
                 <IndianRupee className="w-5 h-5" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs">
+          <div className="bg-white/80 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 shadow-xs transition-all hover:shadow-md">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">Active Accounts</p>
-                <h3 className="text-2xl font-bold text-emerald-600 mt-1">{activeCount}</h3>
+                <p className="text-xs uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400">Active Accounts</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{activeCount}</h3>
                 <span className="text-xs text-slate-400 mt-1 inline-block">{Math.round((activeCount / totalCustomers) * 100 || 0)}% engagement rate</span>
               </div>
-              <div className="p-3 rounded-xl bg-teal-50 border border-teal-100 text-teal-600">
+              <div className="p-3 rounded-xl bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200/50 dark:border-indigo-800/40">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="bg-white/80 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-center justify-between shadow-xs">
           <div className="flex flex-1 items-center gap-3 w-full md:w-auto">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -238,10 +239,10 @@ export default function Users() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search by name, email, city, or ID..."
-                className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500"
+                className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
               />
               {search && (
-                <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">
+                <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-900 dark:hover:text-white">
                   <X className="w-3.5 h-3.5" />
                 </button>
               )}
@@ -250,7 +251,7 @@ export default function Users() {
             <select
               value={roleFilter}
               onChange={e => setRoleFilter(e.target.value)}
-              className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-3 py-2 focus:outline-none focus:bg-white focus:border-violet-500"
+              className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
             >
               <option value="ALL">All Roles</option>
               <option value="buyer">Buyers</option>
@@ -261,7 +262,7 @@ export default function Users() {
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
-              className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-3 py-2 focus:outline-none focus:bg-white focus:border-violet-500"
+              className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
             >
               <option value="ALL">All Status</option>
               <option value="active">Active</option>
@@ -271,45 +272,45 @@ export default function Users() {
 
           <button
             onClick={() => setShowAddModal(true)}
-            className="w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-violet-500/20 transition cursor-pointer"
+            className="w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-violet-500/20 transition cursor-pointer"
           >
             <UserPlus className="w-4 h-4" />
             <span>Add Customer</span>
           </button>
         </div>
 
-        <div className="bg-white border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs">
+        <div className="bg-white/80 dark:bg-slate-900/70 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50/70">
-                  <th className="text-left px-6 py-3.5 text-slate-500 font-semibold text-xs uppercase tracking-wider">Customer</th>
-                  <th className="text-left px-6 py-3.5 text-slate-500 font-semibold text-xs uppercase tracking-wider">Role & Status</th>
-                  <th className="text-left px-6 py-3.5 text-slate-500 font-semibold text-xs uppercase tracking-wider">Location</th>
-                  <th className="text-left px-6 py-3.5 text-slate-500 font-semibold text-xs uppercase tracking-wider">Orders</th>
-                  <th className="text-left px-6 py-3.5 text-slate-500 font-semibold text-xs uppercase tracking-wider">Total Spent</th>
-                  <th className="text-left px-6 py-3.5 text-slate-500 font-semibold text-xs uppercase tracking-wider">Last Active</th>
-                  <th className="text-right px-6 py-3.5 text-slate-500 font-semibold text-xs uppercase tracking-wider">Actions</th>
+                <tr className="border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
+                  <th className="text-left px-6 py-4 text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Customer</th>
+                  <th className="text-left px-6 py-4 text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Role & Status</th>
+                  <th className="text-left px-6 py-4 text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Location</th>
+                  <th className="text-left px-6 py-4 text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Orders</th>
+                  <th className="text-left px-6 py-4 text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Total Spent</th>
+                  <th className="text-left px-6 py-4 text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Last Active</th>
+                  <th className="text-right px-6 py-4 text-slate-500 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-200/70 dark:divide-slate-800/70">
                 {filteredUsers.map(user => (
-                  <tr key={user.id} className="hover:bg-slate-50/70 transition group">
+                  <tr key={user.id} className="hover:bg-slate-100/60 dark:hover:bg-slate-800/40 transition group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={user.imageUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=128&q=80'}
                           alt={user.firstName}
-                          className="w-10 h-10 rounded-xl object-cover ring-2 ring-slate-100"
+                          className="w-10 h-10 rounded-xl object-cover border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800"
                         />
                         <div>
-                          <p className="text-slate-900 font-semibold text-sm flex items-center gap-1.5">
+                          <p className="text-slate-900 dark:text-white font-semibold text-sm flex items-center gap-1.5">
                             {user.firstName} {user.lastName}
                             {user.role === 'vip' && (
-                              <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+                              <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
                             )}
                           </p>
-                          <p className="text-slate-500 text-xs">{user.email}</p>
+                          <p className="text-slate-500 dark:text-slate-400 text-xs">{user.email}</p>
                           <span className="font-mono text-[10px] text-slate-400 block mt-0.5">{user.id}</span>
                         </div>
                       </div>
@@ -317,28 +318,27 @@ export default function Users() {
 
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-semibold uppercase tracking-wider border ${
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wider border ${
                           user.role === 'vip'
-                            ? 'bg-amber-50 text-amber-700 border-amber-200'
+                            ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/60'
                             : user.role === 'admin'
-                            ? 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200'
-                            : 'bg-slate-100 text-slate-700 border-slate-200'
+                            ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 border-violet-200/80 dark:border-violet-800/60'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
                         }`}>
                           {user.role}
                         </span>
 
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold ${
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold border ${
                           user.status === 'active'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-rose-50 text-rose-700 border border-rose-200'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/60'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700 line-through'
                         }`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${user.status === 'active' ? 'bg-emerald-500' : 'bg-rose-500'}`} />
                           {user.status}
                         </span>
                       </div>
                     </td>
 
-                    <td className="px-6 py-4 text-slate-600 text-xs">
+                    <td className="px-6 py-4 text-slate-600 dark:text-slate-400 text-xs">
                       <div className="flex items-center gap-1.5">
                         <MapPin className="w-3.5 h-3.5 text-slate-400" />
                         <span>{user.city || 'Mumbai'}, {user.country || 'India'}</span>
@@ -346,19 +346,19 @@ export default function Users() {
                     </td>
 
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5 text-slate-700 text-xs font-semibold">
-                        <ShoppingBag className="w-3.5 h-3.5 text-violet-600" />
+                      <div className="flex items-center gap-1.5 text-slate-800 dark:text-slate-200 text-xs font-semibold">
+                        <ShoppingBag className="w-3.5 h-3.5 text-violet-600 dark:text-violet-400" />
                         <span>{user.ordersCount || 0} orders</span>
                       </div>
                     </td>
 
                     <td className="px-6 py-4">
-                      <span className="text-slate-900 font-bold text-sm">
+                      <span className="text-slate-900 dark:text-white font-bold text-sm font-mono">
                         {formatINR(user.totalSpent || 0)}
                       </span>
                     </td>
 
-                    <td className="px-6 py-4 text-slate-500 text-xs">
+                    <td className="px-6 py-4 text-slate-500 dark:text-slate-400 text-xs">
                       <div className="flex items-center gap-1">
                         <Clock className="w-3 h-3 text-slate-400" />
                         <span>{new Date(user.lastSignIn || user.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
@@ -369,7 +369,7 @@ export default function Users() {
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => setSelectedUser(user)}
-                          className="p-2 rounded-lg bg-slate-100 hover:bg-violet-50 text-slate-600 hover:text-violet-600 border border-slate-200 transition cursor-pointer"
+                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 transition cursor-pointer"
                           title="View Customer Profile"
                         >
                           <Eye className="w-4 h-4" />
@@ -377,19 +377,15 @@ export default function Users() {
 
                         <button
                           onClick={() => handleToggleStatus(user.id)}
-                          className={`p-2 rounded-lg border transition cursor-pointer ${
-                            user.status === 'active'
-                              ? 'bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border-slate-200'
-                              : 'bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-600 border-slate-200'
-                          }`}
+                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700 transition cursor-pointer"
                           title={user.status === 'active' ? 'Deactivate Account' : 'Activate Account'}
                         >
-                          {user.status === 'active' ? <XCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
+                          {user.status === 'active' ? <XCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
                         </button>
 
                         <button
                           onClick={() => handleDeleteUser(user.id)}
-                          className="p-2 rounded-lg bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 transition cursor-pointer"
+                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-rose-50 dark:bg-slate-800 dark:hover:bg-rose-950/30 text-slate-600 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 border border-slate-200/80 dark:border-slate-700 transition cursor-pointer"
                           title="Delete Record"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -413,35 +409,35 @@ export default function Users() {
       </div>
 
       {selectedUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 shadow-2xl relative transition-colors duration-200">
             <button
               onClick={() => setSelectedUser(null)}
-              className="absolute top-6 right-6 p-2 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-900 transition cursor-pointer"
+              className="absolute top-6 right-6 p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 pb-6 border-b border-slate-100">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 pb-6 border-b border-slate-200 dark:border-slate-800">
               <img
                 src={selectedUser.imageUrl}
                 alt={selectedUser.firstName}
-                className="w-20 h-20 rounded-2xl object-cover ring-4 ring-violet-500/10 shadow-md"
+                className="w-16 h-16 rounded-2xl object-cover border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 shadow"
               />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-2xl font-bold text-slate-900">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
                     {selectedUser.firstName} {selectedUser.lastName}
                   </h3>
                   {selectedUser.role === 'vip' && (
-                    <span className="flex items-center gap-1 text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-lg">
-                      <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" /> VIP
+                    <span className="flex items-center gap-1 text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 px-2.5 py-0.5 rounded-md">
+                      <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" /> VIP
                     </span>
                   )}
                 </div>
-                <p className="text-slate-500 text-sm mt-0.5">{selectedUser.email}</p>
-                <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-slate-500">
-                  <span className="font-mono bg-slate-100 px-2 py-0.5 rounded text-violet-700 border border-slate-200 font-semibold">
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-0.5">{selectedUser.email}</p>
+                <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-slate-500 dark:text-slate-400">
+                  <span className="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 font-semibold">
                     ID: {selectedUser.id}
                   </span>
                   <span>Joined: {new Date(selectedUser.createdAt).toLocaleDateString()}</span>
@@ -450,50 +446,42 @@ export default function Users() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-xs text-slate-500 uppercase font-semibold">Contact & Phone</p>
-                <p className="text-sm font-semibold text-slate-800 mt-1 flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-violet-600" />
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60">
+                <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">Contact & Phone</p>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white mt-1 flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-violet-500" />
                   {selectedUser.phone || 'Not provided'}
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-xs text-slate-500 uppercase font-semibold">Shipping Destination</p>
-                <p className="text-sm font-semibold text-slate-800 mt-1 flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-violet-600" />
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60">
+                <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">Shipping Destination</p>
+                <p className="text-sm font-semibold text-slate-900 dark:text-white mt-1 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-indigo-500" />
                   {selectedUser.city}, {selectedUser.country}
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-xs text-slate-500 uppercase font-semibold">Total Purchases</p>
-                <p className="text-lg font-bold text-emerald-600 mt-1">
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60">
+                <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">Total Purchases</p>
+                <p className="text-lg font-bold text-slate-900 dark:text-white mt-1 font-mono">
                   {formatINR(selectedUser.totalSpent || 0)}
                 </p>
-                <p className="text-xs text-slate-500 mt-0.5">{selectedUser.ordersCount || 0} completed orders</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{selectedUser.ordersCount || 0} completed orders</p>
               </div>
 
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                <p className="text-xs text-slate-500 uppercase font-semibold">Account Tier Control</p>
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60">
+                <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">Account Tier Control</p>
                 <div className="flex items-center gap-2 mt-2">
                   <button
                     onClick={() => handleRoleChange(selectedUser.id, selectedUser.role === 'vip' ? 'buyer' : 'vip')}
-                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer ${
-                      selectedUser.role === 'vip'
-                        ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
-                        : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
-                    }`}
+                    className="px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer"
                   >
                     {selectedUser.role === 'vip' ? 'Demote to Buyer' : 'Promote to VIP'}
                   </button>
                   <button
                     onClick={() => handleToggleStatus(selectedUser.id)}
-                    className={`px-3 py-1 rounded-lg text-xs font-semibold border transition cursor-pointer ${
-                      selectedUser.status === 'active'
-                        ? 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100'
-                        : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                    }`}
+                    className="px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition cursor-pointer"
                   >
                     {selectedUser.status === 'active' ? 'Deactivate' : 'Activate'}
                   </button>
@@ -502,21 +490,21 @@ export default function Users() {
             </div>
 
             <div className="mt-6">
-              <h4 className="text-sm font-semibold text-slate-800 mb-3 uppercase tracking-wider">
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-3 uppercase tracking-wider">
                 Order History ({userOrders.length})
               </h4>
               <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
                 {userOrders.map(order => (
-                  <div key={order.id} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                  <div key={order.id} className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between">
                     <div>
-                      <p className="font-mono text-xs font-bold text-violet-600">{order.id}</p>
-                      <p className="text-xs text-slate-500 mt-0.5">
+                      <p className="font-mono text-xs font-bold text-slate-900 dark:text-white">{order.id}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                         {order.items?.length || 1} items • {new Date(order.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-slate-900">{formatINR(order.pricing?.total || order.total_amount || 0)}</p>
-                      <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      <p className="text-sm font-bold text-slate-900 dark:text-white font-mono">{formatINR(order.pricing?.total || order.total_amount || 0)}</p>
+                      <span className="text-[10px] font-semibold text-violet-700 dark:text-violet-300 bg-violet-50 dark:bg-violet-950/40 px-2 py-0.5 rounded-md border border-violet-200/80 dark:border-violet-800/60">
                         {order.status}
                       </span>
                     </div>
@@ -531,7 +519,7 @@ export default function Users() {
             <div className="mt-8 flex justify-end">
               <button
                 onClick={() => setSelectedUser(null)}
-                className="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-semibold transition cursor-pointer"
+                className="px-6 py-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-xl text-sm font-semibold shadow-lg shadow-violet-500/20 transition cursor-pointer"
               >
                 Close Profile
               </button>
@@ -541,87 +529,89 @@ export default function Users() {
       )}
 
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative transition-colors duration-200">
             <button
               onClick={() => setShowAddModal(false)}
-              className="absolute top-6 right-6 p-2 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-900 transition cursor-pointer"
+              className="absolute top-6 right-6 p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-bold text-slate-900 mb-1 flex items-center gap-2">
-              <UserPlus className="w-5 h-5 text-violet-600" />
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-violet-600 dark:text-violet-400">
+                <UserPlus className="w-4 h-4" />
+              </div>
               Add New Customer
             </h3>
-            <p className="text-xs text-slate-500 mb-6">Create a customer profile to simulate Clerk registration or manual account provisioning.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Create a customer profile to simulate Clerk registration or manual account provisioning.</p>
 
             <form onSubmit={handleAddUser} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">First Name *</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">First Name *</label>
                   <input
                     type="text"
                     required
                     value={newUserData.firstName}
                     onChange={e => setNewUserData({ ...newUserData, firstName: e.target.value })}
                     placeholder="e.g. Liam"
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-violet-500"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Last Name</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Last Name</label>
                   <input
                     type="text"
                     value={newUserData.lastName}
                     onChange={e => setNewUserData({ ...newUserData, lastName: e.target.value })}
                     placeholder="e.g. Vance"
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-violet-500"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Email Address *</label>
                 <input
                   type="email"
                   required
                   value={newUserData.email}
                   onChange={e => setNewUserData({ ...newUserData, email: e.target.value })}
                   placeholder="liam.vance@example.com"
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-violet-500"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Phone</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Phone</label>
                   <input
                     type="text"
                     value={newUserData.phone}
                     onChange={e => setNewUserData({ ...newUserData, phone: e.target.value })}
                     placeholder="+91 98765-12345"
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-violet-500"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">City</label>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">City</label>
                   <input
                     type="text"
                     value={newUserData.city}
                     onChange={e => setNewUserData({ ...newUserData, city: e.target.value })}
                     placeholder="Mumbai"
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-violet-500"
+                    className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Role / Tier</label>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Role / Tier</label>
                 <select
                   value={newUserData.role}
                   onChange={e => setNewUserData({ ...newUserData, role: e.target.value })}
-                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:bg-white focus:border-violet-500"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500 cursor-pointer"
                 >
                   <option value="buyer">Standard Buyer</option>
                   <option value="vip">VIP Member</option>
@@ -629,17 +619,17 @@ export default function Users() {
                 </select>
               </div>
 
-              <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-slate-100">
+              <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-semibold hover:bg-slate-200 transition cursor-pointer"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-sm font-semibold transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-violet-500/25 transition cursor-pointer"
+                  className="px-5 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-xl text-sm font-semibold shadow-lg shadow-violet-500/20 transition cursor-pointer"
                 >
                   Create Customer
                 </button>

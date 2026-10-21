@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AdminAuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './components/AdminLayout';
 import Login from './pages/Login';
@@ -16,9 +17,10 @@ import Settings from './pages/Settings';
 
 export default function App() {
   return (
-    <AdminAuthProvider>
-      <BrowserRouter>
-        <NotificationProvider>
+    <ThemeProvider>
+      <AdminAuthProvider>
+        <BrowserRouter>
+          <NotificationProvider>
           <Routes>
             <Route path="/login" element={<Login />} />
 
@@ -45,5 +47,6 @@ export default function App() {
         </NotificationProvider>
       </BrowserRouter>
     </AdminAuthProvider>
+  </ThemeProvider>
   );
 }

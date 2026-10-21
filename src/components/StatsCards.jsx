@@ -54,10 +54,8 @@ export default function StatsCards() {
       value: formatINR(stats.totalRevenue),
       subtitle: `${stats.totalOrders} recorded orders`,
       icon: IndianRupee,
+      color: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 shadow-emerald-500/10',
       to: '/analytics',
-      gradient: 'from-emerald-500 to-teal-600',
-      shadow: 'shadow-emerald-500/20',
-      tagColor: 'text-emerald-700 bg-emerald-50 border-emerald-200',
     },
     {
       key: 'orders',
@@ -65,10 +63,8 @@ export default function StatsCards() {
       value: stats.totalOrders.toLocaleString('en-IN'),
       subtitle: 'Live database orders',
       icon: ShoppingCart,
+      color: 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border-indigo-500/30 shadow-indigo-500/10',
       to: '/orders',
-      gradient: 'from-violet-500 to-purple-600',
-      shadow: 'shadow-violet-500/20',
-      tagColor: 'text-violet-700 bg-violet-50 border-violet-200',
     },
     {
       key: 'customers',
@@ -76,10 +72,8 @@ export default function StatsCards() {
       value: stats.totalCustomers.toLocaleString('en-IN'),
       subtitle: 'Verified user accounts',
       icon: Users,
+      color: 'bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30 shadow-purple-500/10',
       to: '/users',
-      gradient: 'from-amber-500 to-orange-600',
-      shadow: 'shadow-amber-500/20',
-      tagColor: 'text-amber-700 bg-amber-50 border-amber-200',
     },
     {
       key: 'products',
@@ -87,10 +81,8 @@ export default function StatsCards() {
       value: stats.totalProducts.toLocaleString('en-IN'),
       subtitle: 'Active inventory items',
       icon: Package,
+      color: 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30 shadow-amber-500/10',
       to: '/products',
-      gradient: 'from-rose-500 to-pink-600',
-      shadow: 'shadow-rose-500/20',
-      tagColor: 'text-rose-700 bg-rose-50 border-rose-200',
     },
   ];
 
@@ -102,25 +94,23 @@ export default function StatsCards() {
           <Link
             key={card.key}
             to={card.to}
-            className="group relative bg-white border border-slate-200/80 rounded-2xl p-5 hover:border-slate-300 shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 block cursor-pointer"
+            className="group relative bg-white dark:bg-[#0D1322]/80 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 hover:border-indigo-500/50 hover:shadow-xl dark:hover:shadow-black/40 transition-all block cursor-pointer backdrop-blur-sm"
           >
-            <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${card.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-            
             <div className="relative flex items-start justify-between">
               <div>
-                <p className="text-sm text-slate-500 font-medium">{card.label}</p>
-                <h3 className="text-2xl font-bold text-slate-900 mt-1 font-mono">
+                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{card.label}</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1 font-mono tracking-tight">
                   {stats.loading ? '—' : card.value}
                 </h3>
-                <div className="mt-2 text-xs font-medium text-slate-500 flex items-center gap-1.5">
-                  <span className={`px-2 py-0.5 rounded-full border text-[10px] font-semibold ${card.tagColor}`}>
-                    Live
+                <div className="mt-2 text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-emerald-500/30 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live
                   </span>
                   <span>{card.subtitle}</span>
                 </div>
               </div>
-              <div className={`p-3 rounded-xl bg-gradient-to-br ${card.gradient} ${card.shadow} shadow-lg`}>
-                <Icon className="w-5 h-5 text-white" />
+              <div className={`p-3 rounded-xl border shadow-sm ${card.color} group-hover:scale-105 transition-transform`}>
+                <Icon className="w-5 h-5" />
               </div>
             </div>
           </Link>

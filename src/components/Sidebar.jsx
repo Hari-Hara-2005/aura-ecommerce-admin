@@ -25,18 +25,18 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen z-50 flex flex-col transition-all duration-300 ease-in-out bg-white/95 backdrop-blur-xl border-r border-slate-200/80 shadow-xs ${
+      className={`fixed left-0 top-0 h-screen z-50 flex flex-col transition-all duration-300 ease-in-out bg-white dark:bg-[#0B101D] border-r border-slate-200 dark:border-slate-800/80 shadow-md dark:shadow-2xl ${
         collapsed ? 'w-[72px]' : 'w-[260px]'
       }`}
     >
-      <div className="flex items-center gap-3 px-5 py-6 border-b border-slate-200/80">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center shrink-0 shadow-md shadow-violet-500/20">
+      <div className="flex items-center gap-3 px-5 py-6 border-b border-slate-200 dark:border-slate-800/80">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-violet-600 flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/25">
           <Sparkles className="w-5 h-5 text-white" />
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
-            <h1 className="text-lg font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent tracking-tight">AURA</h1>
-            <p className="text-[10px] text-slate-500 tracking-widest uppercase font-semibold -mt-0.5">Admin Console</p>
+            <h1 className="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">AURA</h1>
+            <p className="text-[10px] text-indigo-600 dark:text-indigo-400 tracking-widest uppercase font-bold -mt-0.5">Admin Console</p>
           </div>
         )}
       </div>
@@ -51,16 +51,13 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
             <NavLink
               key={item.to}
               to={item.to}
-              className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 relative ${
+              className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
                 isActive
-                  ? 'bg-violet-50 text-violet-700 shadow-xs border border-violet-100 font-semibold'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
+                  ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold shadow-md shadow-indigo-600/25'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/50'
               }`}
             >
-              {isActive && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-gradient-to-b from-violet-600 to-fuchsia-600" />
-              )}
-              <Icon className={`w-5 h-5 shrink-0 transition ${isActive ? 'text-violet-600' : 'text-slate-400 group-hover:text-violet-600'}`} />
+              <Icon className={`w-5 h-5 shrink-0 transition ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-white'}`} />
               {!collapsed && <span>{item.label}</span>}
             </NavLink>
           );
@@ -69,7 +66,7 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
 
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="mx-3 mb-4 p-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-200/80 transition flex items-center justify-center cursor-pointer"
+        className="mx-3 mb-4 p-2 rounded-xl bg-slate-100 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/60 text-slate-600 dark:text-slate-400 hover:text-black dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center justify-center cursor-pointer"
         aria-label="Toggle Sidebar"
       >
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -77,5 +74,3 @@ export default function Sidebar({ collapsed: propCollapsed, setCollapsed: propSe
     </aside>
   );
 }
-
-export function sidebarWidth(collapsed) { return collapsed ? 72 : 260; }

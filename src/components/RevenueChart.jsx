@@ -1,12 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { orderService } from '../services/api';
 import { formatINR } from '../utils/format';
+import { useTheme } from '../context/ThemeContext';
 
 export default function RevenueChart() {
   const canvasRef = useRef(null);
   const [hoveredIdx, setHoveredIdx] = useState(-1);
   const [chartData, setChartData] = useState([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     async function fetchRevenueData() {
@@ -82,17 +84,20 @@ export default function RevenueChart() {
 
     ctx.clearRect(0, 0, W, H);
 
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(0, 0, 0, 0.06)';
+    const textColor = isDark ? '#94a3b8' : '#64748b';
+
     for (let i = 0; i <= 4; i++) {
       const y = padTop + (chartH / 4) * i;
-      ctx.strokeStyle = 'rgba(226,232,240,0.9)';
+      ctx.strokeStyle = gridColor;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(padLeft, y);
       ctx.lineTo(W - padRight, y);
       ctx.stroke();
       const val = Math.round(maxVal - (maxVal / 4) * i);
-      ctx.fillStyle = '#64748b';
-      ctx.font = '11px Plus Jakarta Sans, sans-serif';
+      ctx.fillStyle = textColor;
+      ctx.font = '11px sans-serif';
       ctx.textAlign = 'right';
       ctx.fillText(`₹${(val / 1000).toFixed(0)}k`, padLeft - 10, y + 4);
     }
@@ -103,8 +108,13 @@ export default function RevenueChart() {
     }));
 
     const grad = ctx.createLinearGradient(0, padTop, 0, H - padBottom);
-    grad.addColorStop(0, 'rgba(139,92,246,0.22)');
-    grad.addColorStop(1, 'rgba(139,92,246,0.01)');
+    if (isDark) {
+      grad.addColorStop(0, 'rgba(99, 102, 241, 0.28)');
+      grad.addColorStop(1, 'rgba(99, 102, 241, 0.00)');
+    } else {
+      grad.addColorStop(0, 'rgba(79, 70, 229, 0.18)');
+      grad.addColorStop(1, 'rgba(79, 70, 229, 0.00)');
+    }
     ctx.beginPath();
     ctx.moveTo(points[0].x, H - padBottom);
     points.forEach((p) => ctx.lineTo(p.x, p.y));
@@ -112,6 +122,11 @@ export default function RevenueChart() {
     ctx.closePath();
     ctx.fillStyle = grad;
     ctx.fill();
+
+    const lineGrad = ctx.createLinearGradient(padLeft, 0, W - padRight, 0);
+    lineGrad.addColorStop(0, '#06b6d4');
+    lineGrad.addColorStop(0.5, '#6366f1');
+    lineGrad.addColorStop(1, '#a855f7');
 
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
@@ -121,26 +136,23 @@ export default function RevenueChart() {
       const cpx2 = prev.x + (2 * (curr.x - prev.x)) / 3;
       ctx.bezierCurveTo(cpx1, prev.y, cpx2, curr.y, curr.x, curr.y);
     }
-    const lineGrad = ctx.createLinearGradient(padLeft, 0, W - padRight, 0);
-    lineGrad.addColorStop(0, '#8b5cf6');
-    lineGrad.addColorStop(1, '#d946ef');
     ctx.strokeStyle = lineGrad;
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 3;
     ctx.stroke();
 
     points.forEach((p, i) => {
       ctx.beginPath();
       ctx.arc(p.x, p.y, hoveredIdx === i ? 6 : 4, 0, Math.PI * 2);
-      ctx.fillStyle = hoveredIdx === i ? '#d946ef' : '#8b5cf6';
+      ctx.fillStyle = hoveredIdx === i ? '#06b6d4' : '#6366f1';
       ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = isDark ? '#080C14' : '#ffffff';
+      ctx.lineWidth = 2.5;
       ctx.stroke();
     });
 
     data.forEach((d, i) => {
-      ctx.fillStyle = hoveredIdx === i ? '#0f172a' : '#64748b';
-      ctx.font = `${hoveredIdx === i ? '600' : '400'} 12px Plus Jakarta Sans, sans-serif`;
+      ctx.fillStyle = hoveredIdx === i ? (isDark ? '#38bdf8' : '#4f46e5') : textColor;
+      ctx.font = `${hoveredIdx === i ? '700' : '500'} 12px sans-serif`;
       ctx.textAlign = 'center';
       ctx.fillText(d.month, points[i].x, H - padBottom + 22);
     });
@@ -148,23 +160,23 @@ export default function RevenueChart() {
     if (hoveredIdx >= 0 && hoveredIdx < data.length) {
       const p = points[hoveredIdx];
       const text = formatINR(data[hoveredIdx].value);
-      ctx.fillStyle = 'rgba(255,255,255,0.98)';
+      ctx.fillStyle = isDark ? '#0f172a' : '#1e293b';
       const tw = ctx.measureText(text).width + 24;
       const th = 28;
       const tx = p.x - tw / 2;
-      const ty = p.y - th - 14;
+      const ty = p.y - th - 12;
       ctx.beginPath();
-      ctx.roundRect(tx, ty, tw, th, 8);
+      ctx.roundRect(tx, ty, tw, th, 6);
       ctx.fill();
-      ctx.strokeStyle = '#8b5cf6';
-      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = isDark ? '#334155' : '#475569';
+      ctx.lineWidth = 1;
       ctx.stroke();
-      ctx.fillStyle = '#0f172a';
-      ctx.font = '600 12px Plus Jakarta Sans, sans-serif';
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 11px sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(text, p.x, ty + 18);
     }
-  }, [hoveredIdx, data, maxVal]);
+  }, [hoveredIdx, data, maxVal, isDark]);
 
   const handleMouse = (e) => {
     const canvas = canvasRef.current;
@@ -184,15 +196,15 @@ export default function RevenueChart() {
   };
 
   return (
-    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs">
+    <div className="bg-white dark:bg-[#0D1322]/80 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-6 backdrop-blur-sm shadow-sm transition-colors duration-200">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-base font-semibold text-slate-900">Revenue Overview</h3>
-          <p className="text-xs text-slate-500 mt-0.5">Calculated from verified orders in database</p>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">Revenue Overview</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Calculated from verified orders in database</p>
         </div>
         <div className="text-right">
-          <span className="text-xs text-slate-400 block">Total Volume</span>
-          <span className="text-sm font-bold text-slate-900 font-mono">{formatINR(totalRevenue)}</span>
+          <span className="text-xs text-slate-500 dark:text-slate-400 block">Total Volume</span>
+          <span className="text-sm font-bold text-slate-900 dark:text-white font-mono">{formatINR(totalRevenue)}</span>
         </div>
       </div>
       <canvas
