@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { ClerkProvider, useUser, useClerk, SignedIn, SignedOut, UserButton, SignIn } from '@clerk/clerk-react';
+import { setAdminUser as setAdminUserAction, logoutAdmin as logoutAdminAction } from '../store/slices/authSlice';
 
 const AuthContext = createContext(null);
 
@@ -55,10 +57,24 @@ export function isUserAdmin(user) {
 function ClerkBridge({ children }) {
   const { user, isSignedIn, isLoaded } = useUser();
   const { signOut } = useClerk();
+  const dispatch = useDispatch();
 
   const isAdmin = isLoaded && isSignedIn ? isUserAdmin(user) : false;
 
+  useEffect(() => {
+    if (isSignedIn && user) {
+      dispatch(setAdminUserAction({
+        id: user.id,
+        email: user.primaryEmailAddress?.emailAddress,
+        fullName: user.fullName,
+      }));
+    } else {
+      dispatch(logoutAdminAction());
+    }
+  }, [isSignedIn, user, dispatch]);
+
   const handleSignOut = async () => {
+    dispatch(logoutAdminAction());
     await signOut();
   };
 

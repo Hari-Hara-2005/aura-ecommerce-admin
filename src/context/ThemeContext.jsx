@@ -1,15 +1,18 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  toggleTheme as toggleThemeAction,
+  setTheme as setThemeAction,
+  selectTheme,
+  selectIsDarkMode,
+} from '../store/slices/themeSlice';
 
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    try {
-      const saved = localStorage.getItem('aura_admin_theme');
-      if (saved === 'light' || saved === 'dark') return saved;
-    } catch {}
-    return 'dark'; // default to sleek modern dark console
-  });
+  const dispatch = useDispatch();
+  const theme = useSelector(selectTheme);
+  const isDark = useSelector(selectIsDarkMode);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -26,11 +29,15 @@ export function ThemeProvider({ children }) {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    dispatch(toggleThemeAction());
+  };
+
+  const setTheme = (newTheme) => {
+    dispatch(setThemeAction(newTheme));
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, isDark: theme === 'dark', toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, isDark, toggleTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );

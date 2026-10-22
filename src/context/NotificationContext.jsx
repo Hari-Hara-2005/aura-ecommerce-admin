@@ -1,7 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { productService, orderService, userService, notificationService } from '../services/api';
 import { getSocket } from '../services/socket';
 import { useAdminAuth } from './AuthContext';
+import {
+  setNotifications as setNotificationsAction,
+  addNotification as addNotificationAction,
+  markAsRead as markAsReadAction,
+  markAllAsRead as markAllAsReadAction,
+} from '../store/slices/notificationSlice';
 
 import { formatINR } from '../utils/format';
 import { formatTimeAgo } from '../utils/timeAgo';
@@ -51,6 +58,7 @@ function playNotificationChime() {
 }
 
 export function NotificationProvider({ children }) {
+  const dispatch = useDispatch();
   const { user } = useAdminAuth() || {};
   const adminId = useMemo(() => {
     return (
@@ -201,6 +209,7 @@ export function NotificationProvider({ children }) {
       });
 
       setNotifications(items);
+      dispatch(setNotificationsAction(items));
       setLastUpdated(new Date());
     } catch (err) {
       console.error('[NotificationContext] Failed to load notification feed:', err);
@@ -281,6 +290,7 @@ export function NotificationProvider({ children }) {
   }, []);
 
   const markAsRead = useCallback((id) => {
+    dispatch(markAsReadAction(id));
     setReadIds((prev) => {
       if (prev.includes(id)) return prev;
       const next = [...prev, id];
@@ -288,7 +298,7 @@ export function NotificationProvider({ children }) {
       return next;
     });
     notificationService.markRead(id, adminId);
-  }, [adminId]);
+  }, [adminId, dispatch]);
 
   const markAsUnread = useCallback((id) => {
     setReadIds((prev) => {
@@ -300,6 +310,7 @@ export function NotificationProvider({ children }) {
   }, [adminId]);
 
   const markAllAsRead = useCallback(() => {
+    dispatch(markAllAsReadAction());
     setNotifications((current) => {
       const activeIds = current.map((n) => n.id);
       setReadIds((prev) => {
@@ -310,7 +321,7 @@ export function NotificationProvider({ children }) {
       notificationService.markRead(activeIds, adminId);
       return current;
     });
-  }, [adminId]);
+  }, [adminId, dispatch]);
 
   const dismissNotification = useCallback((id) => {
     setDismissedIds((prev) => {
